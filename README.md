@@ -1,2 +1,3 @@
-# workshop-d3-js
-SoSe-2017-homework
+# Workshop D3.js
+FHP/SoSe/2017
+Project Files
