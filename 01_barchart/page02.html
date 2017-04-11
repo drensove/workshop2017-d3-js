@@ -17,6 +17,10 @@
 			fill: red;
 		}
 
+		.circle{
+			fill:darkred;
+		}
+
 		text{
 			font-family:"Roboto";
 			font-size: 14px;
@@ -70,7 +74,7 @@
 <script type="text/javascript">
 	window.onload = function () {
 		var data = [
-			[1, 33],
+			[1, 14],
 			[2, 17],
 			[3, 27],
 			[4, 8],
@@ -106,13 +110,6 @@
 				return d[1];
 			})]);
 
-
-		var circle = svg.selectAll("circle");
-		circle.enter().append("circle")
-    		.attr("r",10);
-
-
-
 		svg.append('g')
 			.attr('class', 'axis axis--x')
 			.attr('transform', 'translate(0,' + height +')')
@@ -120,6 +117,9 @@
 		svg.append('g')
 			.attr('class', 'axis axis--y')
 			.call(d3.axisLeft(y));
+
+			//Balken
+		/*
 		svg.selectAll('.bar')
 			.data(data)
 			.enter().append('rect')
@@ -133,12 +133,22 @@
 			.attr('width', x.bandwidth())
 			.attr('height', function (d) {
 				return height - y(d[1]);
-			})
+			});
+*/
+
+			//Kreise
+		svg.selectAll('circle')
+			.data(data)
+			.enter().append('circle')
+				.attr('class', 'circle')
+
+				.attr('cx', function(d,i){return 600+(i*30);})
+				.attr('cy', '150')
+				.attr('r', '10');
 	};
 
 
 </script>
-
 
 </body>
 </html>
