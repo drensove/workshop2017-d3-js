@@ -124,6 +124,7 @@
 			.data(data)
 			.enter().append('rect')
 			.attr('class', 'bar')
+
 			.attr('x', function (d) {
 				return x(d[0])
 			})
@@ -136,16 +137,26 @@
 			});
 */
 
+
 			//Kreise
 		svg.selectAll('circle')
 			.data(data)
 			.enter().append('circle')
 				.attr('class', 'circle')
+				
+    			.attr("cx", width/2)
+    			.attr("cy", height/2)
+    			.attr("r", '15');
 
+    			/*
 				.attr('cx', function(d,i){return 600+(i*30);})
 				.attr('cy', '150')
 				.attr('r', '10');
-	};
+				*/
+
+		
+
+};
 
 
 </script>
