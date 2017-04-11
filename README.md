@@ -2,8 +2,10 @@
 FHP/SoSe/2017
 ## Workspace Files 
 
+This repository contains all material for the course "Information Visualization with d3js" at University of Applied Sciences Potsdam.
+
 * install a webserver
-    * on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project 
+    * on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project
     * command is ```python -m SimpleHTTPServer <portnumber>```
     * or if you use pyhton 3 ```python -m http.server <portnumber>``
     replace  ```<portnumber>``` with a four digit number

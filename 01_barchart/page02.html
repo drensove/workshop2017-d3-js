@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>01 - My Barchart</title>
+	<title>02 - My Barchart</title>
 
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css" 
@@ -62,15 +62,15 @@
 <body>
 <nav class="nav">
 	<h4>MENU</h4>
-	<a href="index.html" class="LinkActiv">Page 01</a>
-	<a href="page02.html">Page 02</a>
+	<a href="index.html">Page 01</a>
+	<a href="page02.html" class="LinkActiv">Page 02</a>
 </nav>
 
 
 <script type="text/javascript">
 	window.onload = function () {
 		var data = [
-			[1, 14],
+			[1, 33],
 			[2, 17],
 			[3, 27],
 			[4, 8],
@@ -105,6 +105,13 @@
 			.domain([0, d3.max(data, function (d) {
 				return d[1];
 			})]);
+
+
+		var circle = svg.selectAll("circle");
+		circle.enter().append("circle")
+    		.attr("r",10);
+
+
 
 		svg.append('g')
 			.attr('class', 'axis axis--x')
