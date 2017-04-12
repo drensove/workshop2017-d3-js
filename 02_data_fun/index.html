@@ -7,7 +7,6 @@
 	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 
-
 </head>
 <body>
 
@@ -32,6 +31,7 @@
 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
+		//----lade csv data----//
 		d3.csv('iris.csv', function (d) {
 				return {
 					id: +d.Id,
@@ -52,9 +52,29 @@
 						d.SepalWidthCm = +d.SepalWidthCm;
 					});
 
-				
+				//----Achsen----//	
+				var x = d3.scaleBand()
+					.rangeRound([0, width])
+					.padding(0.2)
+					.domain(data.map(function (d) {
+						return d[0];
+					}));
+				var y = d3.scaleLinear()
+					.range([height, 0])
+					.domain([0, d3.max(data, function (d) {
+						return d[1];
+					})]);
+
+				svg.append('g')
+					.attr('class', 'axis axis--x')
+					.attr('transform', 'translate(0,' + height +')')
+					.call(d3.axisBottom(x));
+				svg.append('g')
+					.attr('class', 'axis axis--y')
+					.call(d3.axisLeft(y));
 
 			})
+
 
 	};
 
