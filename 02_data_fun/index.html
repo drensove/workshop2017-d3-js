@@ -32,9 +32,10 @@
 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
-		//----lade csv data----//
+		//----lade csv data----
 		d3.csv('iris.csv', function (d) {
 				return {
+					//----choose your dataset----
 					id: +d.Id,
 					petalLengthCm: +d.PetalLengthCm,
 					petalWidthCm: +d.PetalWidthCm,
