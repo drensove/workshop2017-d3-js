@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>01 Loading Datasets</title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+
+</head>
+<body>
+
+<nav class="nav">
+	<h4>MENU</h4>
+	<a href="index.html" class="LinkActiv">Page 01</a>
+	<a href="page02.html">Page 02</a>
+	<a href="page03.html">Page 03</a>
+</nav>
+
+<script>
+	window.onload = function () {
+
+		var margin = {top: 8, bottom: 20, left: 40, right: 8};
+		var height = 400 - margin.top - margin.bottom,
+			width = 550 - margin.left - margin.right;
+
+		var svg = d3.select('body').append('svg')
+			.attr('height', height + margin.top + margin.bottom)
+			.attr('width', width + margin.left + margin.right)
+			.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+		d3.csv('iris.csv', function (d) {
+				return {
+					id: +d.Id,
+					petalLengthCm: +d.PetalLengthCm,
+					petalWidthCm: +d.PetalWidthCm,
+					sepalLengthCm: +d.SepalLengthCm,
+					sepalWidthCm: +d.SepalWidthCm
+				};
+			}, 
+			function (err, data) {
+				if (err) console.log(err);
+				console.log(data);
+					data.forEach(function (d) {
+						d.Id = +d.Id;
+						d.PetalLengthCm = +d.PetalLengthCm;
+						d.PetalWidthCm = +d.PetalWidthCm;
+						d.SepalLengthCm = +d.SepalLengthCm;
+						d.SepalWidthCm = +d.SepalWidthCm;
+					});
+
+				
+
+			})
+
+	};
+
+
+</script>
+</body>
+</html>

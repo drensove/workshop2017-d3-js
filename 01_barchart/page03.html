@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>02 - My Barchart</title>
+	<title>03 - My Circels</title>
 
-	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="../library/d3.min.js"></script>
+	<!--<script href="https://d3js.org/d3.v4.min.js"></script>-->
 	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css" 
 	rel="stylesheet" type="text/css">
 
@@ -76,15 +77,15 @@
 	window.onload = function () {
 		var data = [
 			[1, 30],
-			[2, 17],
+			[2, 29],
 			[3, 27],
-			[4, 8],
-			[5, 17],
-			[6, 22],
+			[4, 22],
+			[5, 19],
+			[6, 17],
 			[7, 15],
-			[8, 27],
+			[8, 19],
 			[9, 22],
-			[10, 2],
+			[10, 24],
 			[11, 34],
 			[12, 34.5]
 		];
@@ -119,45 +120,20 @@
 			.attr('class', 'axis axis--y')
 			.call(d3.axisLeft(y));
 
-			//Balken
-		/*
+			//change bars in circles and position it on the y height.
+		
 		svg.selectAll('.bar')
 			.data(data)
-			.enter().append('rect')
+			.enter().append('circle')
 			.attr('class', 'bar')
 
-			.attr('x', function (d) {
+			.attr('cx', function (d) { 
 				return x(d[0])
 			})
-			.attr('y', function (d) {
+			.attr('cy', function (d) {
 				return y(d[1])
 			})
-			.attr('width', x.bandwidth())
-			.attr('height', function (d) {
-				return height - y(d[1]);
-			});
-*/
-
-
-			//Kreise
-		svg.selectAll('circle')
-			.data(data)
-			.enter().append('circle')
-				.attr('class', 'circle')
-				
-    			.attr("cx", width/2)
-    			.attr("cy", height/2)
-    			.attr("r", '20');
-    		  //.attr("r", function(d){return[20];});
-
-    			/*
-				.attr('cx', function(d,i){return 600+(i*30);})
-				.attr('cy', '150')
-				.attr('r', '10');
-				*/
-
-		
-
+			.attr('r', 10)
 };
 
 

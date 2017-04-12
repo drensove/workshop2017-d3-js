@@ -4,90 +4,26 @@
 	<meta charset="UTF-8">
 	<title>02 - My Barchart</title>
 
-	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="../library/d3.min.js"></script>
+	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
 	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css" 
 	rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 
-	<style>
-		.bar{
-			fill: steelblue;
-		}
-
-		.bar:hover{
-			fill: red;
-		}
-
-		.circle{
-			fill:darkred;
-		}
-
-		text{
-			font-family:"Roboto";
-			font-size: 14px;
-		}
-
-
-		body{
-		background-color: #eeeeee;
-		}
-
-		.nav{ 
-			display: block;
-			height:auto;
-			width: auto;
-			margin:0px auto 40px auto;
-			font-size: 18px;
-			font-weight: 300;
-			font-family:"Roboto", "Open Sans", Arial ;
-			background-color: #eeeeee;
-			text-align: center;
-		}
-
-		.nav a, h1 {
-			color: steelblue;
-			text-decoration: none;
-			margin: 10px 20px;
-			display: inline-flex;
-
-		}
-
-		.nav a:hover{
-			text-decoration: underline;
-			color: black;
-		}
-
-		a.LinkActiv {
-			color: black;
-			text-decoration: underline;
-		}
-	</style>
 
 </head>
 <body>
 <nav class="nav">
 	<h4>MENU</h4>
 	<a href="index.html">Page 01</a>
-	<a href="page02.html">Page 02</a>
-	<a href="page03.html" class="LinkActiv">Page 03</a>
+	<a href="page02.html" class="LinkActiv">Page 02</a>
+	<a href="page03.html">Page 03</a>
 </nav>
 
 
 <script type="text/javascript">
 	window.onload = function () {
-		var data = [
-			[1, 30],
-			[2, 17],
-			[3, 27],
-			[4, 8],
-			[5, 17],
-			[6, 22],
-			[7, 15],
-			[8, 27],
-			[9, 22],
-			[10, 2],
-			[11, 34],
-			[12, 34.5]
-		];
+		
 		var margin = {top: 8, bottom: 20, left: 40, right: 8};
 		var height = 400 - margin.top - margin.bottom,
 			width = 550 - margin.left - margin.right;
