@@ -62,14 +62,14 @@
  		//--drawing the svg--//
 		var x = d3.scaleLinear()
 			.range([0, width])
-			//.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
-			.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); 
+			.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
+			//.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); 
 			
 
 		var y = d3.scaleLinear()
 			.range([height, 0 ])
-			//.domain([0, d3.max(data, function(d) {return d.SepalWidthCm; })]); //start by min=data
-			.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
+			.domain([0, d3.max(data, function(d) {return d.SepalWidthCm; })]); //start by min=data
+			//.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
 
 		svg.append('g')
@@ -87,6 +87,8 @@
 			.attr('r', 3)
 			.attr('cx', function(d) {return x (d.SepalLengthCm);})
 			.attr('cy', function(d) {return y (d.SepalWidthCm);})
+			// .style('stroke', 'red')
+			// .style('fill', 'none');
 			 ;
 
  	}); //--end from csv data

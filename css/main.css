@@ -16,20 +16,20 @@
 .dot
 {
 	fill: steelblue;
-	stroke: black;
+	stroke: none;
 	stroke-width: 2px;
 }
 
 .line{
-	stroke: red;
 	fill:none;
+	stroke: yellowgreen;
+	stroke-width: 2px;
 }
 
 text{
 	font-family:"Roboto";
 	font-size: 14px;
 }
-
 
 body{
 	background-color: #eeeeee;

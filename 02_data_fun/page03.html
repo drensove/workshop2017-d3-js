@@ -11,11 +11,6 @@
 	
 	<style type="text/css">
 		
-		.line
-		{
-				stroke: red;
-				fill:none;
-		}
 	</style>
 
 </head>
@@ -31,21 +26,21 @@
 <script type="text/javascript">
 	window.onload = function () {
 
-		// //Beispiel
-		// var data = [
-		// 	[1, 14],
-		// 	[2, 17],
-		// 	[3, 27],
-		// 	[4, 8],
-		// 	[5, 17],
-		// 	[6, 22],
-		// 	[7, 15],
-		// 	[8, 27],
-		// 	[9, 22],
-		// 	[10, 2],
-		// 	[11, 34],
-		// 	[12, 34.5]
-		// ];
+		//Beispiel
+		var data = [
+			[1, 14],
+			[2, 17],
+			[3, 27],
+			[4, 8],
+			[5, 17],
+			[6, 22],
+			[7, 15],
+			[8, 27],
+			[9, 22],
+			[10, 2],
+			[11, 34],
+			[12, 34.5]
+		];
 		
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
 		var width = 600 - margin.left - margin.right;
@@ -58,22 +53,11 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  			//move and transform the svg frame---/
 
- 	d3.csv('iris.csv', function(error, data){
-
- 		data.forEach(function(d){
- 			d.PetalLengthCm = +d.PetalLengthCm;
-			d.PetalWidthCm = +d.PetalWidthCm;
-			d.SepalLengthCm = +d.SepalLengthCm;
-			d.SepalWidthCm = +d.SepalWidthCm;
-
- 		});
-
-
  		//--drawing the svg--//
 		var x = d3.scaleLinear()
 			.range([0, width]) //go from min=0 to full max=width.
 			.domain(d3.extent(data, function (d) { console.log(d); return d[0]; })); 
-				// (extent) start from data min=1 to data max
+			// (extent) start from data min=1 to data max
 			//.domain([0, d3.max(data, function (d) {return d[1]; })]); 
 				//start from 0 to max=width
 
@@ -82,8 +66,8 @@
 			.domain([0, d3.max(data, function(d) {return d[1]; })]);
 
 		var line = d3.line()
-					.x(function(d) {return x (d[0]);	})
-					.y(function(d) {return y (d[1]);	});
+					.x(function(d) {return x (d[0]); })
+					.y(function(d) {return y (d[1]); });
 
 		svg.append('g')
 			.call(d3.axisLeft(y));
@@ -100,16 +84,13 @@
 			// .style('fill', 'none');
 
 
-
-		svg.selectAll('.dot') //creating circles with classes.dots
+		svg.selectAll('.dot') //creating circles with classes .dot
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'dot')
 			.attr('r', 5)
 			.attr('cy', function(d) {return y (d[1]);})
 			.attr('cx', function(d) {return x (d[0]);});
-
- 	}); //--end from csv data
 
 
 // 			//----Achsen----//
