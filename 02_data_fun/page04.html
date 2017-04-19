@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>03 - Example from 19 April 2017</title>
-
-	<script type="text/javascript" src="../library/d3.min.js"></script>
+	<title>03 - Example-2 from 19 April 2017</title>
 	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
-	<link  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">
+	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
 	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css">
+	<script src="../library/d3.min.js"></script>
 	
 	<style type="text/css">
 		
@@ -30,8 +30,8 @@
 	<h4>MENU</h4>
 	<a href="index.html">Page 01</a>
 	<a href="page02.html">Page 02</a>
-	<a href="page03.html" class="LinkActiv">Page 03</a>
-	<a href="page04.html">Page 04</a>
+	<a href="page03.html">Page 03</a>
+	<a href="page04.html" class="LinkActiv">Page 04</a>
 </nav>
 
 <script type="text/javascript">
@@ -51,11 +51,11 @@
  	d3.csv('iris.csv', function(error, data){
 
  		data.forEach(function(d){
+ 			d.Id = +d.Id;
  			d.PetalLengthCm = +d.PetalLengthCm;
 			d.PetalWidthCm = +d.PetalWidthCm;
 			d.SepalLengthCm = +d.SepalLengthCm;
 			d.SepalWidthCm = +d.SepalWidthCm;
-
  		});
 
 
@@ -91,66 +91,7 @@
 
  	}); //--end from csv data
 
-
-// 			//----Achsen----//
-// 		var x = d3.scaleBand()
-// 			.rangeRound([0, width])
-// 			.padding(0.2)
-// 			.domain(data.map(function (d) {
-// 				return d[0];
-// 			}));
-// 		var y = d3.scaleLinear()
-// 			.range([height, 0])
-// 			.domain([0, d3.max(data, function (d) {
-// 				return d[1];
-// 			})]);
-
-// 		svg.append('g')
-// 			.attr('class', 'axis axis--x')
-// 			.attr('transform', 'translate(0,' + height +')')
-// 			.call(d3.axisBottom(x));
-// 		svg.append('g')
-// 			.attr('class', 'axis axis--y')
-// 			.call(d3.axisLeft(y));
-
-// 			//Balken
-// 		/*
-// 		svg.selectAll('.bar')
-// 			.data(data)
-// 			.enter().append('rect')
-// 			.attr('class', 'bar')
-
-// 			.attr('x', function (d) {
-// 				return x(d[0])
-// 			})
-// 			.attr('y', function (d) {
-// 				return y(d[1])
-// 			})
-// 			.attr('width', x.bandwidth())
-// 			.attr('height', function (d) {
-// 				return height - y(d[1]);
-// 			});
-// */
-
-
-// 			//Kreise
-// 		svg.selectAll('circle')
-// 			.data(data)
-// 			.enter().append('circle')
-// 				.attr('class', 'circle')
-				
-//     			.attr("cx", width/2)
-//     			.attr("cy", height/2)
-//     			.attr("r", '20');
-//     		  //.attr("r", function(d){return[20];});
-
-//     			/*
-// 				.attr('cx', function(d,i){return 600+(i*30);})
-// 				.attr('cy', '150')
-// 				.attr('r', '10');
-// 				*/
-	};
-
+	}; //--end
 
 </script>
 
