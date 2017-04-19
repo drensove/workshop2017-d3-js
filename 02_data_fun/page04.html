@@ -11,10 +11,16 @@
 	
 	<style type="text/css">
 		
-		.line
+		.sepa-dot
 		{
-				stroke: red;
-				fill:none;
+				stroke: none;
+				fill:steelblue;
+		}
+
+		.petal-dot
+		{
+				stroke: none;
+				fill:darkred;
 		}
 	</style>
 
@@ -30,22 +36,6 @@
 
 <script type="text/javascript">
 	window.onload = function () {
-
-		// //Beispiel
-		// var data = [
-		// 	[1, 14],
-		// 	[2, 17],
-		// 	[3, 27],
-		// 	[4, 8],
-		// 	[5, 17],
-		// 	[6, 22],
-		// 	[7, 15],
-		// 	[8, 27],
-		// 	[9, 22],
-		// 	[10, 2],
-		// 	[11, 34],
-		// 	[12, 34.5]
-		// ];
 		
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
 		var width = 600 - margin.left - margin.right;
@@ -71,19 +61,16 @@
 
  		//--drawing the svg--//
 		var x = d3.scaleLinear()
-			.range([0, width]) //go from min=0 to full max=width.
-			.domain(d3.extent(data, function (d) { console.log(d); return d[0]; })); 
-				// (extent) start from data min=1 to data max
-			//.domain([0, d3.max(data, function (d) {return d[1]; })]); 
-				//start from 0 to max=width
+			.range([0, width])
+			//.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
+			.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); 
+			
 
 		var y = d3.scaleLinear()
 			.range([height, 0 ])
-			.domain([0, d3.max(data, function(d) {return d[1]; })]);
+			//.domain([0, d3.max(data, function(d) {return d.SepalWidthCm; })]); //start by min=data
+			.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
-		var line = d3.line()
-					.x(function(d) {return x (d[0]);	})
-					.y(function(d) {return y (d[1]);	});
 
 		svg.append('g')
 			.call(d3.axisLeft(y));
@@ -92,22 +79,15 @@
 			.attr('transform', 'translate(0,' + height +')')
 			.call(d3.axisBottom(x));
 
-		svg.append('path') //create a path
-			.datum(data)
-			.attr('class', 'line')
-			.attr('d', line);
-			// .style('stroke', 'red')
-			// .style('fill', 'none');
-
-
 
 		svg.selectAll('.dot') //creating circles with classes.dots
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'dot')
-			.attr('r', 5)
-			.attr('cy', function(d) {return y (d[1]);})
-			.attr('cx', function(d) {return x (d[0]);});
+			.attr('r', 3)
+			.attr('cx', function(d) {return x (d.SepalLengthCm);})
+			.attr('cy', function(d) {return y (d.SepalWidthCm);})
+			 ;
 
  	}); //--end from csv data
 
