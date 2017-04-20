@@ -40,7 +40,7 @@
 		
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
 		var width = 600 - margin.left - margin.right;
-		var height = 300 - margin.top - margin.bottom;
+		var height = 600 - margin.top - margin.bottom;
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
@@ -49,52 +49,48 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  			//move and transform the svg frame---/
 
- 	d3.csv('iris.csv', function(error, data){
 
- 		data.forEach(function(d){
- 			d.Id = +d.Id;
- 			d.PetalLengthCm = +d.PetalLengthCm;
-			d.PetalWidthCm = +d.PetalWidthCm;
-			d.SepalLengthCm = +d.SepalLengthCm;
-			d.SepalWidthCm = +d.SepalWidthCm;
- 		});
+ 	//---test was hier nicht geht.---//
+	d3.csv('dataset/esi.csv', function (d) {
+			//----choose your dataset----//
+			return {
+				Id: +d.Id,
+			 	Name: +d.Name,
+			 	ESI: +d.ESI,
+				};
+			}, 
+			function (err, data) {
+				if (err) console.log(err);
+				console.log(data);
+					//---transform in real numbers---//
+					data.forEach(function (d) {
+						d.Id = +d.Id;
+					 	d.Name = +d.Name;
+					 	d.ESI = +d.ESI;
+					});
 
+  	 		//--drawing the svg--//
+	 	 var x = d3.scaleLinear()
+	 	 	.range([0, width])
+	 	//	.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
+	 	// 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
 
- 		//--drawing the svg--//
-		var x = d3.scaleLinear()
-			.range([0, width])
-			.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
-			//.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); 
-			
+	 	 var y = d3.scaleLinear()
+	 	 	.range([height, 0 ])
+	 	 	.domain([0, d3.max(data, function(d) {return d.ESI; })]); 
+	 	// 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
-		var y = d3.scaleLinear()
-			.range([height, 0 ])
-			.domain([0, d3.max(data, function(d) {return d.SepalWidthCm; })]); //start by min=data
-			//.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
+	 	svg.append('g')
+	 		.call(d3.axisLeft(y));
 
+	 	svg.append('g')
+	 		.attr('transform', 'translate(0,' + height +')')
+	 		.call(d3.axisBottom(x));
 
-		svg.append('g')
-			.call(d3.axisLeft(y));
+ 	}) //--end from csv data
 
-		svg.append('g')
-			.attr('transform', 'translate(0,' + height +')')
-			.call(d3.axisBottom(x));
+}; //--end
 
-
-		svg.selectAll('.dot') //creating circles with classes.dots
-			.data(data)
-			.enter().append('circle')
-			.attr('class', 'dot')
-			.attr('r', 3)
-			.attr('cx', function(d) {return x (d.SepalLengthCm);})
-			.attr('cy', function(d) {return y (d.SepalWidthCm);})
-			// .style('stroke', 'red')
-			// .style('fill', 'none');
-			 ;
-
- 	}); //--end from csv data
-
-	}; //--end
 
 </script>
 
