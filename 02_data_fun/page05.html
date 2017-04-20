@@ -49,26 +49,41 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  			//move and transform the svg frame---/
 
+ 		 
 
- 	d3.csv('esi.csv', function(error, data) {
- 		if (error) console.log(err);
-				   console.log(data);
-		
- 		
- 		data.forEach(function(d){
- 		 	//d.Id = +d.Id;
-			//d.ESI = +d.ESI;
-			//d.Entfernung = +d.Entfernung;
-			//d.Flux = +d.Flux;
-			//d.Masse = +d.Masse;
-			//d.Name = +d.Name;
-			//d.Planetenklasse = +d.Planetenklasse;
-			//d.Radius = +d.Radius;
-			//d.Status = +d.Status;
-			//d.Teq = +d.Teq;
-			//d.Umlaufzeit = +d.Umlaufzeit;
+ 	d3.csv('esi.csv', function(d) {
+ 		return{
+ 			Id: +d.Id,
+ 			ESI: +d.ESI,
+ 			Entfernung: +d.Entfernung,
+ 			Flux: +d.Flux,
+ 			Masse: +d.Masse,
+ 			Name: +d.Name,
+ 			Planetenklasse: +d.Planetenklasse,
+ 			Radius: +d.Radius,
+ 			Status: +d.Status,
+ 			Teq: +d.Teq,
+ 			Umlaufzeit: +d.Umlaufzeit	
+ 		};
+ 	},
 
- 			});
+ 		function (error, data) {
+ 			 if (error) console.log(error);
+				    	console.log(data);
+  		
+	  		data.forEach(function(d){
+	 		 	d.Id = +d.Id;
+				d.ESI = +d.ESI;
+				d.Entfernung = +d.Entfernung;
+				d.Flux = +d.Flux;
+				d.Masse = +d.Masse;
+				d.Name = +d.Name;
+				d.Planetenklasse = +d.Planetenklasse;
+				d.Radius = +d.Radius;
+				d.Status = +d.Status;
+				d.Teq = +d.Teq;
+				d.Umlaufzeit = +d.Umlaufzeit;
+	 		});
 
   	 		//--drawing the svg--//
 	 	 var x = d3.scaleLinear()
