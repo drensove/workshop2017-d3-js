@@ -39,8 +39,8 @@
 	window.onload = function () {
 		
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
-		var width = 600 - margin.left - margin.right;
-		var height = 600 - margin.top - margin.bottom;
+		var width = 400 - margin.left - margin.right;
+		var height = 400 - margin.top - margin.bottom;
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
@@ -50,34 +50,33 @@
  			//move and transform the svg frame---/
 
 
- 	//---test was hier nicht geht.---//
-	d3.csv('dataset/esi.csv', function (d) {
+ 	d3.csv('esi.csv', function(error, data) {
+ 		if (error) console.log(err);
+				   console.log(data);
+
+		return {
 			//----choose your dataset----//
-			return {
-				Id: +d.Id,
-			 	Name: +d.Name,
-			 	ESI: +d.ESI,
-				};
-			}, 
-			function (err, data) {
-				if (err) console.log(err);
-				console.log(data);
-					//---transform in real numbers---//
-					data.forEach(function (d) {
-						d.Id = +d.Id;
-					 	d.Name = +d.Name;
-					 	d.ESI = +d.ESI;
-					});
+			id: +d.Id,
+			
+			};
+		
+		},
+ 		
+ 		data.forEach(function(d){
+ 		 	//d.Id = +d.Id;
+			// d.Name = +d.Name;
+			// d.ESI = +d.ESI;
+ 		});
 
   	 		//--drawing the svg--//
 	 	 var x = d3.scaleLinear()
 	 	 	.range([0, width])
-	 	//	.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
+	 	//	.domain([0, d3.max(data, function(d) {return d.Id; })]); //start by min=0
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
 
 	 	 var y = d3.scaleLinear()
 	 	 	.range([height, 0 ])
-	 	 	.domain([0, d3.max(data, function(d) {return d.ESI; })]); 
+	 	//	.domain([0, d3.max(data, function(d) {return d.ESI; })]); 
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
 	 	svg.append('g')
@@ -87,7 +86,7 @@
 	 		.attr('transform', 'translate(0,' + height +')')
 	 		.call(d3.axisBottom(x));
 
- 	}) //--end from csv data
+ 	}); //--end from csv data
 
 }; //--end
 
