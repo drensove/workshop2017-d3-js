@@ -11,13 +11,13 @@
 	
 	<style type="text/css">
 		
-		.sepa-dot
+		.dot1
 		{
 				stroke: none;
 				fill:steelblue;
 		}
 
-		.petal-dot
+		.dot2
 		{
 				stroke: none;
 				fill:darkred;
@@ -39,8 +39,8 @@
 	window.onload = function () {
 		
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
-		var width = 600 - margin.left - margin.right;
-		var height = 600 - margin.top - margin.bottom;
+		var width = 400 - margin.left - margin.right;
+		var height = 400 - margin.top - margin.bottom;
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
@@ -49,35 +49,52 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  			//move and transform the svg frame---/
 
+ 		 
 
- 	//---test was hier nicht geht.---//
-	d3.csv('dataset/esi.csv', function (d) {
-			//----choose your dataset----//
-			return {
-				Id: +d.Id,
-			 	Name: +d.Name,
-			 	ESI: +d.ESI,
-				};
-			}, 
-			function (err, data) {
-				if (err) console.log(err);
-				console.log(data);
-					//---transform in real numbers---//
-					data.forEach(function (d) {
-						d.Id = +d.Id;
-					 	d.Name = +d.Name;
-					 	d.ESI = +d.ESI;
-					});
+ 	d3.csv('esi.csv', function(d) {
+ 		return{
+ 			//Id: d.Id,
+ 			Name: d.Name,
+ 			ESI: +d.ESI,
+ 			Planetenklasse: d.Planetenklasse,
+ 			Masse: +d.Masse,
+ 			//Radius: +d.Radius,
+ 			//Flux: +d.Flux,
+ 			//Teq: +d.Teq,
+ 			Umlaufzeit: +d.Umlaufzeit,
+ 			Entfernung: +d.Entfernung,
+ 			Status: d.Status
+ 		};
+ 	},
+
+ 		function (error, data) {
+ 			 if (error) console.log(error);
+				    	console.log(data);
+  		
+	  		data.forEach(function(d){
+	 		 	//d.Id = d.Id;
+	 		 	d.Name = d.Name;
+				d.ESI = +d.ESI;
+				d.Planetenklasse = d.Planetenklasse;
+				d.Masse = +d.Masse;
+				//d.Radius = +d.Radius;
+				//d.Flux = +d.Flux;
+				//d.Teq = +d.Teq;
+				d.Umlaufzeit = +d.Umlaufzeit;
+				d.Entfernung = +d.Entfernung;
+				d.Status = d.Status;
+	 		});
 
   	 		//--drawing the svg--//
+
 	 	 var x = d3.scaleLinear()
 	 	 	.range([0, width])
-	 	//	.domain([0, d3.max(data, function(d) {return d.SepalLengthCm; })]); //start by min=0
+	 		.domain([0, d3.max(data, function(d) {return d.Umlaufzeit; })]); //start by min=0
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
 
 	 	 var y = d3.scaleLinear()
 	 	 	.range([height, 0 ])
-	 	 	.domain([0, d3.max(data, function(d) {return d.ESI; })]); 
+	 		.domain([0, d3.max(data, function(d) {return d.Entfernung; })]); 
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
 	 	svg.append('g')
@@ -87,7 +104,15 @@
 	 		.attr('transform', 'translate(0,' + height +')')
 	 		.call(d3.axisBottom(x));
 
- 	}) //--end from csv data
+	 	svg.selectAll('.dot') //creating circles with classes.dots
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'dot')
+			.attr('r', 3)
+			.attr('cx', function(d) {return x (d.Umlaufzeit);})
+			.attr('cy', function(d) {return y (d.Entfernung);})
+
+ 	}); //--end from csv data
 
 }; //--end
 
