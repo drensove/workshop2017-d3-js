@@ -53,17 +53,17 @@
 
  	d3.csv('esi.csv', function(d) {
  		return{
- 			Id: +d.Id,
+ 			//Id: d.Id,
+ 			Name: d.Name,
  			ESI: +d.ESI,
- 			Entfernung: +d.Entfernung,
- 			Flux: +d.Flux,
+ 			Planetenklasse: d.Planetenklasse,
  			Masse: +d.Masse,
- 			Name: +d.Name,
- 			Planetenklasse: +d.Planetenklasse,
- 			Radius: +d.Radius,
- 			Status: +d.Status,
- 			Teq: +d.Teq,
- 			Umlaufzeit: +d.Umlaufzeit	
+ 			//Radius: +d.Radius,
+ 			//Flux: +d.Flux,
+ 			//Teq: +d.Teq,
+ 			Umlaufzeit: +d.Umlaufzeit,
+ 			Entfernung: +d.Entfernung,
+ 			Status: d.Status
  		};
  	},
 
@@ -72,28 +72,29 @@
 				    	console.log(data);
   		
 	  		data.forEach(function(d){
-	 		 	d.Id = +d.Id;
+	 		 	//d.Id = d.Id;
+	 		 	d.Name = d.Name;
 				d.ESI = +d.ESI;
-				d.Entfernung = +d.Entfernung;
-				d.Flux = +d.Flux;
+				d.Planetenklasse = d.Planetenklasse;
 				d.Masse = +d.Masse;
-				d.Name = +d.Name;
-				d.Planetenklasse = +d.Planetenklasse;
-				d.Radius = +d.Radius;
-				d.Status = +d.Status;
-				d.Teq = +d.Teq;
+				//d.Radius = +d.Radius;
+				//d.Flux = +d.Flux;
+				//d.Teq = +d.Teq;
 				d.Umlaufzeit = +d.Umlaufzeit;
+				d.Entfernung = +d.Entfernung;
+				d.Status = d.Status;
 	 		});
 
   	 		//--drawing the svg--//
+
 	 	 var x = d3.scaleLinear()
 	 	 	.range([0, width])
-	 	//	.domain([0, d3.max(data, function(d) {return d.Id; })]); //start by min=0
+	 		.domain([0, d3.max(data, function(d) {return d.Umlaufzeit; })]); //start by min=0
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
 
 	 	 var y = d3.scaleLinear()
 	 	 	.range([height, 0 ])
-	 	//	.domain([0, d3.max(data, function(d) {return d.ESI; })]); 
+	 		.domain([0, d3.max(data, function(d) {return d.Entfernung; })]); 
 	 	// 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
 	 	svg.append('g')
@@ -102,6 +103,14 @@
 	 	svg.append('g')
 	 		.attr('transform', 'translate(0,' + height +')')
 	 		.call(d3.axisBottom(x));
+
+	 	svg.selectAll('.dot') //creating circles with classes.dots
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'dot')
+			.attr('r', 3)
+			.attr('cx', function(d) {return x (d.Umlaufzeit);})
+			.attr('cy', function(d) {return y (d.Entfernung);})
 
  	}); //--end from csv data
 
