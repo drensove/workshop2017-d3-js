@@ -49,23 +49,28 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  			//move and transform the svg frame---/
 
- 		 
+
+// d3.csv("data.csv", function(data) {
+//    dataset = data.map(function(d) { 
+//		return [ +d["max_i"], +d["min_i"] ]; });
+//    console.log(dataset)
+// });
 
  	d3.csv('esi.csv', function(d) {
 
- 		// return{
+ 		 return{
  		// 	//Id: d.Id,
- 		// 	name: d.name,
- 		// 	esi: +d.esi,
+ 		 	name: d.name,
+ 		 	esi: +d.esi,
  		// 	planettype: d.planettype,
  		// 	mass: +d.mass,
  		// 	//radius: +d.radius,
  		// 	//flux: +d.flux,
  		// 	//teq: +d.teq,
- 		// 	period: +d.period,
- 		// 	distance: +d.distance,
+ 		 	period: +d.period,
+ 		 	distance: +d.distance
  		// 	status: d.status
- 		// };
+ 		 };
  	},
 
  		function (error, data) {
@@ -77,14 +82,14 @@
 	 		 	//d.Id = d.Id;
 	 		 	d.name = d.name;
 				d.esi = +d.esi;
-				d.planettype = d.planettype;
-				d.mass = +d.mass;
+				//d.planettype = d.planettype;
+				//d.mass = +d.mass;
 				//d.radius = +d.radius;
 				//d.flux = +d.flux;
 				//d.teq = +d.teq;
 				d.period = +d.period;
 				d.distance = +d.distance;
-				d.status = d.status;
+				//d.status = d.status;
 	 		});
 
   	 		//--drawing the svg--//
