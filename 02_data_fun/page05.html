@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>05 - Dataset ESI</title>
+	<title>05 - Dataset esi</title>
 	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
 	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
 	<link rel="stylesheet" type="text/css" href="../css/main.css">
@@ -52,19 +52,20 @@
  		 
 
  	d3.csv('esi.csv', function(d) {
- 		return{
- 			//Id: d.Id,
- 			Name: d.Name,
- 			ESI: +d.ESI,
- 			Planetenklasse: d.Planetenklasse,
- 			Masse: +d.Masse,
- 			//Radius: +d.Radius,
- 			//Flux: +d.Flux,
- 			//Teq: +d.Teq,
- 			Umlaufzeit: +d.Umlaufzeit,
- 			Entfernung: +d.Entfernung,
- 			Status: d.Status
- 		};
+
+ 		// return{
+ 		// 	//Id: d.Id,
+ 		// 	name: d.name,
+ 		// 	esi: +d.esi,
+ 		// 	planettype: d.planettype,
+ 		// 	mass: +d.mass,
+ 		// 	//radius: +d.radius,
+ 		// 	//flux: +d.flux,
+ 		// 	//teq: +d.teq,
+ 		// 	period: +d.period,
+ 		// 	distance: +d.distance,
+ 		// 	status: d.status
+ 		// };
  	},
 
  		function (error, data) {
@@ -74,44 +75,44 @@
 	  		data.forEach(function(d){
 
 	 		 	//d.Id = d.Id;
-	 		 	d.Name = d.Name;
-				d.ESI = +d.ESI;
-				d.Planetenklasse = d.Planetenklasse;
-				d.Masse = +d.Masse;
-				//d.Radius = +d.Radius;
-				//d.Flux = +d.Flux;
-				//d.Teq = +d.Teq;
-				d.Umlaufzeit = +d.Umlaufzeit;
-				d.Entfernung = +d.Entfernung;
-				d.Status = d.Status;
+	 		 	d.name = d.name;
+				d.esi = +d.esi;
+				d.planettype = d.planettype;
+				d.mass = +d.mass;
+				//d.radius = +d.radius;
+				//d.flux = +d.flux;
+				//d.teq = +d.teq;
+				d.period = +d.period;
+				d.distance = +d.distance;
+				d.status = d.status;
 	 		});
 
   	 		//--drawing the svg--//
 
-	 	 var x = d3.scaleLinear()
-	 	 	.range([0, width])
-	 		.domain([0, d3.max(data, function(d) {return d.Umlaufzeit; })]); //start by min=0
-	 	// 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
+	 	    var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	// 	.domain([0, d3.max(data, function(d) {return d.period; })]); //start by min=0
+	 	// // 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
 
-	 	 var y = d3.scaleLinear()
-	 	 	.range([height, 0 ])
-	 		.domain([0, d3.max(data, function(d) {return d.Entfernung; })]); 
-	 	// 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
+	 	    var y = d3.scaleLinear()
+	 	  	.range([height, 0 ])
+	 	// 	.domain([0, d3.max(data, function(d) {return d.distance; })]); 
+	 	// // 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
 
-	 	svg.append('g')
-	 		.call(d3.axisLeft(y));
+	 	    svg.append('g')
+	 	 	.call(d3.axisLeft(y));
 
-	 	svg.append('g')
+	 	    svg.append('g')
 	 		.attr('transform', 'translate(0,' + height +')')
-	 		.call(d3.axisBottom(x));
+	 	 	.call(d3.axisBottom(x));
 
-	 	svg.selectAll('.dot') //creating circles with classes.dots
-			.data(data)
-			.enter().append('circle')
-			.attr('class', 'dot')
-			.attr('r', 3)
-			.attr('cx', function(d) {return x (d.Umlaufzeit);})
-			.attr('cy', function(d) {return y (d.Entfernung);})
+	 	// svg.selectAll('.dot') //creating circles with classes.dots
+			// .data(data)
+			// .enter().append('circle')
+			// .attr('class', 'dot')
+			// .attr('r', 3)
+			// .attr('cx', function(d) {return x (d.period);})
+			// .attr('cy', function(d) {return y (d.distance);})
 
  	}); //--end from csv data
 
