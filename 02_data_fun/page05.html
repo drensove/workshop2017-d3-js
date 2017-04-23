@@ -50,59 +50,58 @@
  			//move and transform the svg frame---/
 
 
-// d3.csv("data.csv", function(data) {
-//    dataset = data.map(function(d) { 
-//		return [ +d["max_i"], +d["min_i"] ]; });
-//    console.log(dataset)
-// });
+ 	d3.csv('esi.csv', function(error, data) {
+ 		if (error) console.log(error);
+				   console.log(data);
 
- 	d3.csv('esi.csv', function(d) {
+ 		data.forEach(function(d) {
+ 			return {
+ 				name: d.name,
+ 	 	 		esi: +d.esi,
+ 	 	 		planettype: d.planettype,
+ 	 	 		mass: +d.mass,
+ 	 	 		radius: +d.radius,
+ 	 	 		flux: +d.flux,
+ 	 	 		teq: +d.teq,
+ 	 	 		period: +d.period,
+ 	 	 		distance: +d.distance,
+ 	 	 		status: d.status
+ 			},
 
- 		 return{
- 		// 	//Id: d.Id,
- 		 	name: d.name,
- 		 	esi: +d.esi,
- 		// 	planettype: d.planettype,
- 		// 	mass: +d.mass,
- 		// 	//radius: +d.radius,
- 		// 	//flux: +d.flux,
- 		// 	//teq: +d.teq,
- 		 	period: +d.period,
- 		 	distance: +d.distance
- 		// 	status: d.status
- 		 };
- 	},
-
- 		function (error, data) {
- 			 if (error) console.log(error);
-				    	console.log(data);
-  		
-	  		data.forEach(function(d){
-
-	 		 	//d.Id = d.Id;
+ 		data.forEach(function(d){
 	 		 	d.name = d.name;
 				d.esi = +d.esi;
-				//d.planettype = d.planettype;
-				//d.mass = +d.mass;
-				//d.radius = +d.radius;
-				//d.flux = +d.flux;
-				//d.teq = +d.teq;
+				d.planettype = d.planettype;
+				d.mass = +d.mass;
+				d.radius = +d.radius;
+				d.flux = +d.flux;
+				d.teq = +d.teq;
 				d.period = +d.period;
 				d.distance = +d.distance;
-				//d.status = d.status;
+				d.status = d.status;
 	 		});
+ 		});
+
+ 	// 	//-- Filter function
+ 	// 	function (row) {
+  // 			return !d3.entries(row).some( 
+  //   				function( keyValue ) {
+  //     				return ( isRequiredKey( keyValue.key ) && isNaN( keyValue.value ) );
+  //   				}
+  // 			);
+		// };
 
   	 		//--drawing the svg--//
 
 	 	    var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	// 	.domain([0, d3.max(data, function(d) {return d.period; })]); //start by min=0
-	 	// // 	.domain(d3.extent(data, function (d) {return d.SepalLengthCm; })); //start by min=data
+	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); //start by min=0
+	 	 	.domain(d3.extent(data, function (d) {return d.mass; })); //start by min=data
 
 	 	    var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	// 	.domain([0, d3.max(data, function(d) {return d.distance; })]); 
-	 	// // 	.domain(d3.extent(data, function (d) {return d.SepalWidthCm; })); 
+	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); 
+	 	 	.domain(d3.extent(data, function (d) {return d.mass; })); 
 
 	 	    svg.append('g')
 	 	 	.call(d3.axisLeft(y));
@@ -111,13 +110,22 @@
 	 		.attr('transform', 'translate(0,' + height +')')
 	 	 	.call(d3.axisBottom(x));
 
-	 	// svg.selectAll('.dot') //creating circles with classes.dots
-			// .data(data)
-			// .enter().append('circle')
-			// .attr('class', 'dot')
-			// .attr('r', 3)
-			// .attr('cx', function(d) {return x (d.period);})
-			// .attr('cy', function(d) {return y (d.distance);})
+	 	svg.selectAll('.dot') //creating circles with classes.dots
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'dot')
+			.attr('r', 3)
+			.attr('cx', function(d) {return x (d.mass);})
+			.attr('cy', function(d) {return y (d.mass);});
+
+		// Erde selektieren:
+		// svg.select('#earth')
+		// 	.data(data)
+		// 	.enter().apped('circle')
+		// 	.attr('class', 'earth')
+		// 	.attr('r', 3)
+		// 	.attr('cx', function(d) {return x (d.mass);})
+		// 	.attr('cy', function(d) {return y (d.mass);});
 
  	}); //--end from csv data
 
