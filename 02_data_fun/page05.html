@@ -33,6 +33,7 @@
 	<a href="page03.html">Page 03</a>
 	<a href="page04.html">Page 04</a>
 	<a href="page05.html" class="LinkActiv">Page 05</a>
+	<a href="https://bl.ocks.org/mbostock/3887118">Inspiration | Scatterplot</a>
 </nav>
 
 <script type="text/javascript">
@@ -57,28 +58,28 @@
  		data.forEach(function(d) {
  			return {
  				name: d.name,
- 	 	 		esi: +d.esi,
- 	 	 		planettype: d.planettype,
- 	 	 		mass: +d.mass,
- 	 	 		radius: +d.radius,
- 	 	 		flux: +d.flux,
- 	 	 		teq: +d.teq,
- 	 	 		period: +d.period,
- 	 	 		distance: +d.distance,
- 	 	 		status: d.status
+ 	 	  	    esi: +d.esi,
+ 	 	 // 		planettype: d.planettype,
+ 	 	  		mass: +d.mass,
+ 	 	 // 		radius: +d.radius,
+ 	 	 // 		flux: +d.flux,
+ 	 	 // 		teq: +d.teq,
+ 	 	  		period: +d.period,
+ 	 	  		distance: +d.distance,
+ 	 	 // 		status: d.status
  			},
 
  		data.forEach(function(d){
-	 		 	d.name = d.name;
+	 		  	d.name = d.name;
 				d.esi = +d.esi;
-				d.planettype = d.planettype;
+				// d.planettype = d.planettype;
 				d.mass = +d.mass;
-				d.radius = +d.radius;
-				d.flux = +d.flux;
-				d.teq = +d.teq;
+				// d.radius = +d.radius;
+				// d.flux = +d.flux;
+				// d.teq = +d.teq;
 				d.period = +d.period;
 				d.distance = +d.distance;
-				d.status = d.status;
+				// d.status = d.status;
 	 		});
  		});
 
@@ -96,12 +97,12 @@
 	 	    var x = d3.scaleLinear()
 	 	  	.range([0, width])
 	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); //start by min=0
-	 	 	.domain(d3.extent(data, function (d) {return d.mass; })); //start by min=data
+	 	 	.domain(d3.extent(data, function (d) {return d.esi; })); //start by min=data
 
 	 	    var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
 	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); 
-	 	 	.domain(d3.extent(data, function (d) {return d.mass; })); 
+	 	 	.domain(d3.extent(data, function (d) {return d.esi; })); 
 
 	 	    svg.append('g')
 	 	 	.call(d3.axisLeft(y));
@@ -115,15 +116,16 @@
 			.enter().append('circle')
 			.attr('class', 'dot')
 			.attr('r', 3)
-			.attr('cx', function(d) {return x (d.mass);})
-			.attr('cy', function(d) {return y (d.mass);});
+			.attr('cx', function(d) {return x (d.esi);})
+			.attr('cy', function(d) {return y (d.esi);});
+
 
 		// Erde selektieren:
 		// svg.select('#earth')
 		// 	.data(data)
 		// 	.enter().apped('circle')
 		// 	.attr('class', 'earth')
-		// 	.attr('r', 3)
+		// 	.attr('r', 6)
 		// 	.attr('cx', function(d) {return x (d.mass);})
 		// 	.attr('cy', function(d) {return y (d.mass);});
 
