@@ -8,20 +8,16 @@
 	<link rel="stylesheet" type="text/css" href="../css/main.css">
 	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css">
 	<script src="../library/d3.min.js"></script>
-	
-	<style type="text/css">
-		
-		.dot
-		{
-				stroke: none;
-				fill:steelblue;
-		}
 
-		.dot2
-		{
-				stroke: none;
-				fill:darkred;
-		}
+	<style type="text/css">
+
+		.dot{
+			stroke: none;
+			fill:steelblue;}
+
+		.dot2{
+			stroke: none;
+			fill:darkred;}
 	</style>
 
 </head>
@@ -33,95 +29,86 @@
 	<a href="page03.html">Page 03</a>
 	<a href="page04.html">Page 04</a>
 	<a href="page05.html" class="LinkActiv">Page 05</a>
-	<a href="https://bl.ocks.org/mbostock/3887118">Inspiration | Scatterplot</a>
+	<!--<a href="https://bl.ocks.org/mbostock/3887118">Inspiration | Scatterplot</a>-->
 </nav>
 
 <script type="text/javascript">
 	window.onload = function () {
-		
+
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
 		var width = 400 - margin.left - margin.right;
 		var height = 400 - margin.top - margin.bottom;
+
+		var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
- 			//move and transform the svg frame---/
-
+ 		// nächsten schritte:: die Daten neu umschreiben, werte anpassen, die Kommas mit Punkten ersetzten und vielleicht einen anderen Datensatz benutzten damit ich überhaupt eine Abgabe machen kann.
+ 		//
 
  	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
-				   console.log(data);
+		  	  		 console.log(data);
 
  		data.forEach(function(d) {
- 			return {
- 				name: d.name,
- 	 	  	    esi: +d.esi,
- 	 	 // 		planettype: d.planettype,
- 	 	  		mass: +d.mass,
- 	 	 // 		radius: +d.radius,
- 	 	 // 		flux: +d.flux,
- 	 	 // 		teq: +d.teq,
- 	 	  		period: +d.period,
- 	 	  		distance: +d.distance,
- 	 	 // 		status: d.status
- 			},
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			//d.planettype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			//d.flux = +d.flux;
+			//d.teq = +d.teq;
+			//d.period = +d.period;
+			//d.distance = +d.distance;
+			//d.status = d.status;
 
- 		data.forEach(function(d){
-	 		  	d.name = d.name;
-				d.esi = +d.esi;
-				// d.planettype = d.planettype;
-				d.mass = +d.mass;
-				// d.radius = +d.radius;
-				// d.flux = +d.flux;
-				// d.teq = +d.teq;
-				d.period = +d.period;
-				d.distance = +d.distance;
-				// d.status = d.status;
-	 		});
  		});
+  //--drawing the svg--//
 
- 	// 	//-- Filter function
- 	// 	function (row) {
-  // 			return !d3.entries(row).some( 
-  //   				function( keyValue ) {
-  //     				return ( isRequiredKey( keyValue.key ) && isNaN( keyValue.value ) );
-  //   				}
-  // 			);
-		// };
-
-  	 		//--drawing the svg--//
-
-	 	    var x = d3.scaleLinear()
+	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); //start by min=0
-	 	 	.domain(d3.extent(data, function (d) {return d.esi; })); //start by min=data
+	 	 	  .domain([0, d3.max(data, function(d) {return d.esi; })]); //start by min=0
+	 	// 	.domain(d3.extent(data, function (d) {return d.esi; })); //start by min=data
 
-	 	    var y = d3.scaleLinear()
+	var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	// 	.domain([0, d3.max(data, function(d) {return d.mass; })]); 
-	 	 	.domain(d3.extent(data, function (d) {return d.esi; })); 
+	 	 		.domain([0, d3.max(data, function(d) {return d.esi; })]);
+	 	// 	.domain(d3.extent(data, function (d) {return d.esi; }));
 
-	 	    svg.append('g')
+			svg.append('g')
 	 	 	.call(d3.axisLeft(y));
 
-	 	    svg.append('g')
+	 	  svg.append('g')
 	 		.attr('transform', 'translate(0,' + height +')')
 	 	 	.call(d3.axisBottom(x));
+
+	//--planets--//
 
 	 	svg.selectAll('.dot') //creating circles with classes.dots
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'dot')
-			.attr('r', 3)
-			.attr('cx', function(d) {return x (d.esi);})
+			.attr('r', 2)
+			.attr('cx', function(d) {return x (d.mass);})
 			.attr('cy', function(d) {return y (d.esi);});
 
 
-		// Erde selektieren:
-		// svg.select('#earth')
+	//::NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+		//--Filter function--//
+		// 		function (row) {
+		// 					return !d3.entries(row).some(
+		// 		  				function( keyValue ) {
+		// 		    				return ( isRequiredKey( keyValue.key ) && isNaN( keyValue.value ) );
+		// 		  				}
+		// 					);
+		// };
+
+	//--EARTH?--//
+		// svg.select('.earth')
 		// 	.data(data)
 		// 	.enter().apped('circle')
 		// 	.attr('class', 'earth')
@@ -129,7 +116,19 @@
 		// 	.attr('cx', function(d) {return x (d.mass);})
 		// 	.attr('cy', function(d) {return y (d.mass);});
 
+
+
  	}); //--end from csv data
+
+	var ex = [[0,0,2],[0,23,5],[2,12,5]];
+	circleSet = svg.selectAll()
+			 .data(data)
+			 .enter()
+			 .append('circle')
+			 .filter(function (d, i) { return i === 1;})
+			 // put all your operations on the second element, e.g.
+			 .append('h1').text('foo');
+	console.log(ex);
 
 }; //--end
 
