@@ -42,8 +42,8 @@
 	window.onload = function () {
 
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
-		var width = 600 - margin.left - margin.right;
-		var height = 600 - margin.top - margin.bottom;
+		var width = 800 - margin.left - margin.right;
+		var height = 800 - margin.top - margin.bottom;
 
 		var color = d3.scaleOrdinal(d3.schemeCategory10); //Color
 
@@ -52,7 +52,7 @@
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-			
+
 
  	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
@@ -66,7 +66,7 @@
 			d.radius = +d.radius;
 			//d.flux = +d.flux;
 			//d.teq = +d.teq;
-			//d.period = +d.period;
+			d.period = +d.period;
 			//d.distance = +d.distance;
 			//d.status = d.status;
 
@@ -75,13 +75,13 @@
 
 	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	//    .domain([0, d3.max(data, function(d) {return d.mass; })]); //start by min=0
-	 		 	.domain(d3.extent(data, function (d) {return d.mass; })); //start by min=data
+	 	    .domain([0, d3.max(data, function(d) {return d.period; })]); //start by min=0
+	 	//	 	.domain(d3.extent(data, function (d) {return d.period; })); //start by min=data
 
 	var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	//	.domain([0, d3.max(data, function(d) {return d.esi; })]);
-	 	 	.domain(d3.extent(data, function (d) {return d.esi; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.esi; })]);
+	 	// 	.domain(d3.extent(data, function (d) {return d.esi; }));
 
 			svg.append('g')
 			// .attr('class', 'axis axis--y')
@@ -98,22 +98,22 @@
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'planet')
-			.attr('r', function(d) {return (d.radius*4);}) //to see it i multipli it with 4.
-			.attr('cx', function(d) {return x (d.mass);})
+			.attr('r', function(d) {return (d.mass*1);}) //to see it i multipli it with 4.
+			.attr('cx', function(d) {return x (d.period);})
 			.attr('cy', function(d) {return y (d.esi);})
+			// .style('fill', function (d) {return color(d.esi)});
 			.style('fill', function (d) {return color(d.esi)});
 
 		//--EARTH--//
-		svg.selectAll('.earth')
-			.data("earth")
-			.enter().append('circle')
-			.attr('r', function(d) {return (d.radius*4);})
-			.attr('cx', function(d) {return x (d.mass);})
-			.attr('cy', function(d) {return y (d.esi);})
+		// svg.select([0])
+		// 	.data(data)
+		// 	.enter().append('circle')
+		// 	.attr('class', 'earth')
+		// 	.attr('r', function(d) {return (d.mass*4);})
+		// 	.attr('cx', function(d) {return x (d.period);})
+		// 	.attr('cy', function(d) {return y (d.mass);})
 
-
-
-	//::NOTES and IDEAS:://////////////////////////////////////////////////////////
+	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
 
 		//--Filter function--//
 		// 		function (row) {
@@ -124,29 +124,18 @@
 		// 					);
 		// };
 
-	//--EARTH?--//
-		// svg.select('.earth')
-		// 	.data(data)
-		// 	.enter().apped('circle')
-		// 	.attr('class', 'earth')
-		// 	.attr('r', 6)
-		// 	.attr('cx', function(d) {return x (d.mass);})
-		// 	.attr('cy', function(d) {return y (d.mass);});
-
+		// var ex = [[0,0,2],[0,23,5],[2,12,5]];
+		// circleSet = svg.selectAll()
+		// 		 .data(data)
+		// 		 .enter()
+		// 		 .append('circle')
+		// 		 .filter(function (d, i) { return i === 1;})
+		// 		 // put all your operations on the second element, e.g.
+		// 		 .append('h1').text('foo');
+		// console.log(ex);
 
 
  	}); //--end from csv data
-
-	// var ex = [[0,0,2],[0,23,5],[2,12,5]];
-	// circleSet = svg.selectAll()
-	// 		 .data(data)
-	// 		 .enter()
-	// 		 .append('circle')
-	// 		 .filter(function (d, i) { return i === 1;})
-	// 		 // put all your operations on the second element, e.g.
-	// 		 .append('h1').text('foo');
-	// console.log(ex);
-
 }; //--end
 
 
