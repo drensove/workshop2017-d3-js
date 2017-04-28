@@ -10,22 +10,19 @@
 	<script src="../library/d3.min.js"></script>
 
 	<style type="text/css">
-
 		.dot{
 			stroke: none;
-			fill:steelblue;}
-
+			fill:steelblue;
+		}
 		.earth{
 			stroke: none;
-			fill:black;}
-			
-
+			fill:black;
+		}
 	</style>
-
 </head>
 <body>
 <nav class="nav">
-	<h4>DATA-ESI-PLANETS</h4>
+	<h4>ESI: earth similarity index</h4>
 	<!-- <a href="page01.html">Page 01</a>
 	<a href="page02.html">Page 02</a>
 	<a href="page03.html">Page 03</a>
@@ -48,7 +45,6 @@
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
 
  	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
@@ -93,7 +89,7 @@
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'planet')
-			.attr('r', function(d) {return (d.mass*2);}) //to see it i multipli it with 4.
+			.attr('r', function(d) {return (d.mass*2);}) //makeing it bigger to see earth.
 			.attr('cx', function(d) {return x (d.period);})
 			.attr('cy', function(d) {return y (d.esi);})
 			// .style('fill', function (d) {return color(d.esi)});
@@ -120,6 +116,20 @@
 
 
 </script>
+
+<ul>
+	<li>
+		<p>x = periode</p>
+	</li>
+	<li>
+		<p>y = esi</p>
+	</li>
+	<li>
+		<p>radius = mass</p>
+	</li>
+</ul>
+
+
 
 </body>
 </html>
