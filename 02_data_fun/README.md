@@ -12,7 +12,7 @@ visualization of the earth like exoplanets
 
 ##github
 
-Beta_02 version [here](https://github.com/drensove/workspace2017-d3-js/blob/master/02_data_fun/page05.html).
+Beta_02 version [here](https://github.com/drensove/workspace2017-d3-js/blob/presenting_ESI_data/02_data_fun/index.html).
 
 
 #Server Set Up
