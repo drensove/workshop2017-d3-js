@@ -2,87 +2,128 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>01 Loading Datasets</title>
+	<title>ESI Planets</title>
 	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
 	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
 	<link rel="stylesheet" type="text/css" href="../css/main.css">
 	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css">
 	<script src="../library/d3.min.js"></script>
+
+	<style type="text/css">
+
+		.dot{
+			stroke: none;
+			fill:steelblue;}
+
+		.dot2{
+			stroke: none;
+			fill:darkred;}
+
+		.earth{
+			stroke: none;
+			fill:black;}
+		}
+
+	</style>
+
 </head>
 <body>
-
 <nav class="nav">
-	<h4>MENU</h4>
-	<a href="index.html" class="LinkActiv">Page 01</a>
+	<h4>DATA-ESI-PLANETS</h4>
+	<!-- <a href="page01.html">Page 01</a>
 	<a href="page02.html">Page 02</a>
 	<a href="page03.html">Page 03</a>
 	<a href="page04.html">Page 04</a>
-	<a href="page05.html">Page 05</a>
+	<a href="page05.html" class="LinkActiv">ESI-Planets</a> -->
+
 </nav>
 
-<script>
+<script type="text/javascript">
 	window.onload = function () {
 
-		var margin = {top: 8, bottom: 20, left: 40, right: 8};
-		var height = 400 - margin.top - margin.bottom,
-			width = 550 - margin.left - margin.right;
+		var margin = {top: 10, left: 40, bottom: 20, right: 10};
+		var width = 800 - margin.left - margin.right;
+		var height = 800 - margin.top - margin.bottom;
+
+		var color = d3.scaleOrdinal(d3.schemeCategory10); //Color
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
-			.attr('width', width + margin.left + margin.right)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+ 			.attr('width', width + margin.left + margin.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
-		//----lade csv data----
-		d3.csv('iris.csv', function (d) {
-				return {
-					//----choose your dataset----
-					id: +d.Id,
-					petalLengthCm: +d.PetalLengthCm,
-					petalWidthCm: +d.PetalWidthCm,
-					sepalLengthCm: +d.SepalLengthCm,
-					sepalWidthCm: +d.SepalWidthCm
-				};
-			}, 
-			function (err, data) {
-				if (err) console.log(err);
-				console.log(data);
-					data.forEach(function (d) {
-						d.Id = +d.Id;
-						d.PetalLengthCm = +d.PetalLengthCm;
-						d.PetalWidthCm = +d.PetalWidthCm;
-						d.SepalLengthCm = +d.SepalLengthCm;
-						d.SepalWidthCm = +d.SepalWidthCm;
-					});
+ 	d3.csv('esi.csv', function(error, data) {
+ 		if (error) console.log(error);
+		  	  		 console.log(data);
 
-				//----Achsen----//	
-				var x = d3.scaleBand()
-					.rangeRound([0, width])
-					.padding(0.2)
-					.domain(data.map(function (d) {
-						return d[0];
-					}));
-				var y = d3.scaleLinear()
-					.range([height, 0])
-					.domain([0, d3.max(data, function (d) {
-						return d[1];
-					})]);
+ 		data.forEach(function(d) {
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			//d.planettype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			//d.flux = +d.flux;
+			//d.teq = +d.teq;
+			d.period = +d.period;
+			//d.distance = +d.distance;
+			//d.status = d.status;
 
-				svg.append('g')
-					.attr('class', 'axis axis--x')
-					.attr('transform', 'translate(0,' + height +')')
-					.call(d3.axisBottom(x));
-				svg.append('g')
-					.attr('class', 'axis axis--y')
-					.call(d3.axisLeft(y));
+ 		});
+  //--drawing the svg--//
 
-			})
+	var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	//    .domain([0, d3.max(data, function(d) {return d.period; })]); //start by min=0
+	 		 	.domain(d3.extent(data, function (d) {return d.period; })); //start by min=data
+
+	var y = d3.scaleLinear()
+	 	  	.range([height, 0 ])
+	 	//  	.domain([0, d3.max(data, function(d) {return d.esi; })]);
+	 	 	  .domain(d3.extent(data, function (d) {return d.esi; }));
+
+			svg.append('g')
+			// .attr('class', 'axis axis--y')
+	 	 	.call(d3.axisLeft(y));
+
+	 	  svg.append('g')
+			// .attr('class', 'axis axis--x')
+	 		.attr('transform', 'translate(0,' + height +')')
+	 	 	.call(d3.axisBottom(x));
+
+	//--planets--//
+	 	svg.selectAll('.planet')
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'planet')
+			.attr('r', function(d) {return (d.mass*2);}) //to see it i multipli it with 4.
+			.attr('cx', function(d) {return x (d.period);})
+			.attr('cy', function(d) {return y (d.esi);})
+			// .style('fill', function (d) {return color(d.esi)});
+			.style('fill', 'none')
+			.style('stroke-width', '2')
+			.style('stroke', function (d) {return color(d.esi)});
 
 
-	};
+		//--EARTH selection ?--//
+		// svg.select([0])
+		// 	.data(data)
+		// 	.enter().append('circle')
+		// 	.attr('class', 'earth')
+		// 	.attr('r', function(d) {return (d.mass*4);})
+		// 	.attr('cx', function(d) {return x (d.period);})
+		// 	.attr('cy', function(d) {return y (d.mass);})
+
+	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+	// https://bl.ocks.org/mbostock/3887118 Inspiration | Scatterplot //
+
+ 	}); //--end from csv data
+}; //--end
 
 
 </script>
+
 </body>
 </html>
