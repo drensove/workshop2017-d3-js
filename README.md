@@ -4,11 +4,11 @@ FHP/SoSe/2017
 
 This repository contains all material for the course "Information Visualization with d3js" at University of Applied Sciences Potsdam.
 
-*Tasks:
+### Tasks:
+01. Visualisation from ESI Index:
+[01_code](https://github.com/drensove/workspace2017-d3-js/blob/presenting_ESI_data/02_data_fun/index.html), April_2017
 
-   01. Exoplanet Chart [01_Lesson](https://github.com/drensove/workspace2017-d3-js/blob/presenting_ESI_data/02_data_fun/index.html)
-
-* install a webserver
+## install a webserver
     * on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project
     * command is ```python -m SimpleHTTPServer <portnumber>```
     * or if you use pyhton 3 ```python -m http.server <portnumber>``
