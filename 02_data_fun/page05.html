@@ -18,6 +18,12 @@
 		.dot2{
 			stroke: none;
 			fill:darkred;}
+
+		.earth{
+			stroke: none;
+			fill:black;}
+		}
+
 	</style>
 
 </head>
@@ -36,18 +42,17 @@
 	window.onload = function () {
 
 		var margin = {top: 10, left: 40, bottom: 20, right: 10};
-		var width = 400 - margin.left - margin.right;
-		var height = 400 - margin.top - margin.bottom;
+		var width = 600 - margin.left - margin.right;
+		var height = 600 - margin.top - margin.bottom;
 
-		var color = d3.scaleOrdinal(d3.schemeCategory10);
+		var color = d3.scaleOrdinal(d3.schemeCategory10); //Color
 
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
- 		// nächsten schritte:: die Daten neu umschreiben, werte anpassen, die Kommas mit Punkten ersetzten und vielleicht einen anderen Datensatz benutzten damit ich überhaupt eine Abgabe machen kann.
- 		//
+			
 
  	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
@@ -70,30 +75,42 @@
 
 	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	 	  .domain([0, d3.max(data, function(d) {return d.esi; })]); //start by min=0
-	 	// 	.domain(d3.extent(data, function (d) {return d.esi; })); //start by min=data
+	 	//    .domain([0, d3.max(data, function(d) {return d.mass; })]); //start by min=0
+	 		 	.domain(d3.extent(data, function (d) {return d.mass; })); //start by min=data
 
 	var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	 		.domain([0, d3.max(data, function(d) {return d.esi; })]);
-	 	// 	.domain(d3.extent(data, function (d) {return d.esi; }));
+	 	//	.domain([0, d3.max(data, function(d) {return d.esi; })]);
+	 	 	.domain(d3.extent(data, function (d) {return d.esi; }));
 
 			svg.append('g')
+			// .attr('class', 'axis axis--y')
 	 	 	.call(d3.axisLeft(y));
 
 	 	  svg.append('g')
+			// .attr('class', 'axis axis--x')
 	 		.attr('transform', 'translate(0,' + height +')')
 	 	 	.call(d3.axisBottom(x));
 
-	//--planets--//
 
-	 	svg.selectAll('.dot') //creating circles with classes.dots
+	//--planets--//
+	 	svg.selectAll('.planet') //creating circles with classes.dots
 			.data(data)
 			.enter().append('circle')
-			.attr('class', 'dot')
-			.attr('r', 2)
+			.attr('class', 'planet')
+			.attr('r', function(d) {return (d.radius*4);}) //to see it i multipli it with 4.
 			.attr('cx', function(d) {return x (d.mass);})
-			.attr('cy', function(d) {return y (d.esi);});
+			.attr('cy', function(d) {return y (d.esi);})
+			.style('fill', function (d) {return color(d.esi)});
+
+		//--EARTH--//
+		svg.selectAll('.earth')
+			.data("earth")
+			.enter().append('circle')
+			.attr('r', function(d) {return (d.radius*4);})
+			.attr('cx', function(d) {return x (d.mass);})
+			.attr('cy', function(d) {return y (d.esi);})
+
 
 
 	//::NOTES and IDEAS:://////////////////////////////////////////////////////////
@@ -120,15 +137,15 @@
 
  	}); //--end from csv data
 
-	var ex = [[0,0,2],[0,23,5],[2,12,5]];
-	circleSet = svg.selectAll()
-			 .data(data)
-			 .enter()
-			 .append('circle')
-			 .filter(function (d, i) { return i === 1;})
-			 // put all your operations on the second element, e.g.
-			 .append('h1').text('foo');
-	console.log(ex);
+	// var ex = [[0,0,2],[0,23,5],[2,12,5]];
+	// circleSet = svg.selectAll()
+	// 		 .data(data)
+	// 		 .enter()
+	// 		 .append('circle')
+	// 		 .filter(function (d, i) { return i === 1;})
+	// 		 // put all your operations on the second element, e.g.
+	// 		 .append('h1').text('foo');
+	// console.log(ex);
 
 }; //--end
 

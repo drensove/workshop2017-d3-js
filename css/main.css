@@ -36,7 +36,7 @@ body{
 }
 
 .nav
-{ 
+{
 	display: block;
 	height:auto;
 	width: auto;
@@ -66,5 +66,9 @@ body{
 		}
 
 		.axis--x{
-			fill:red;
+			fill:grey;
+		}
+
+		.axis--y{
+			fill:grey;
 		}
