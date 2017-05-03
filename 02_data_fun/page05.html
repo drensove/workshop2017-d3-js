@@ -27,9 +27,8 @@
 	<a href="page02.html">Page 02</a>
 	<a href="page03.html">Page 03</a>
 	<a href="page04.html">Page 04</a>
-	<a href="page05.html">ESI-Planets - Beta 2</a>
-	<a href="index.html" class="LinkActiv">ESI-Planets</a>
-
+	<a href="page05.html" class="LinkActiv">ESI-Planets - Beta 2</a>
+	<a href="index.html">ESI-Planets</a>
 
 </nav>
 
@@ -37,9 +36,9 @@
 
 	window.onload = function () {
 
-		var margin = {top: 50, left: 150, bottom: 80, right: 10};
-		var width = 960 - margin.left - margin.right;
-		var height = 500 - margin.top - margin.bottom;
+		var margin = {top: 20, left: 40, bottom: 40, right: 10};
+		var width = 800 - margin.left - margin.right;
+		var height = 800 - margin.top - margin.bottom;
 
 		var color = d3.scaleOrdinal(d3.schemeCategory10); //Color
 
@@ -49,7 +48,6 @@
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-
  	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
 		  	  		 console.log(data);
@@ -57,24 +55,28 @@
  		data.forEach(function(d) {
  			d.name = d.name;
 			d.esi = +d.esi;
+			//d.planettype = d.planettype;
 			d.mass = +d.mass;
 			d.radius = +d.radius;
+			//d.flux = +d.flux;
+			//d.teq = +d.teq;
 			d.period = +d.period;
- 		});
+			//d.distance = +d.distance;
+			//d.status = d.status;
 
-    //scaling
+ 		});
+  //--drawing the svg--//
+
 	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	  	.domain([0, d3.max(data, function(d) {return d.period; })]); // start by axis x=0
-	  //	.domain([0.55, d3.max(data, function (d) {return d.esi;})+0.01]); //example
-
+	 	//    .domain([0, d3.max(data, function(d) {return d.period; })]); //start by min=0
+	 		 	.domain(d3.extent(data, function (d) {return d.period; })); //start by min=data
 
 	var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	  	.domain([0.5, d3.max(data, function (d) {return d.esi;})]); // start by axis y=50
-	 //	 	.domain(d3.extent(data, function (d) {return d.esi; }));
+	 	//  	.domain([0, d3.max(data, function(d) {return d.esi; })]);
+	 	 	  .domain(d3.extent(data, function (d) {return d.esi; }));
 
-	//draw axis
 			svg.append('g')
 			// .attr('class', 'axis axis--y')
 	 	 	.call(d3.axisLeft(y));
@@ -84,55 +86,19 @@
 	 		.attr('transform', 'translate(0,' + height +')')
 	 	 	.call(d3.axisBottom(x));
 
-	//labelling
-		svg.append("text")             
-      		.attr("x", width/2)
-      		.attr("y", height+50)
-      		.style("text-anchor", "middle")
-      		.text("Periode Time = earth year")
-      		.style("font-size", 16);
-
-        svg.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
-      		.style("text-anchor", "middle")
-      		.text("ESI Index = earth like planet")
-      		.style("font-size", 16);
-
-
 	//--planets--//
 	 	svg.selectAll('.planet')
 			.data(data)
 			.enter().append('circle')
 			.attr('class', 'planet')
-			.attr('r', function(d){
-				return (d.mass*2);
-			}) //makeing it bigger to see earth.
-
-			.attr('cx', function(d){
-				return x (d.period);
-			})
-			.attr('cy', function(d){
-				return y (d.esi);
-			}) // .style('fill', function (d) {return color(d.esi)});
-
+			.attr('r', function(d) {return (d.mass*2);}) //makeing it bigger to see earth.
+			.attr('cx', function(d) {return x (d.period);})
+			.attr('cy', function(d) {return y (d.esi);})
+			// .style('fill', function (d) {return color(d.esi)});
 			.style('fill', 'none')
 			.style('stroke-width', '2')
-			.style('stroke', function (d){
-				return color(d.esi);
-			})
+			.style('stroke', function (d) {return color(d.esi)});
 
-	//select earth
-			.style("fill", function(d) { 
-				if (d.status === "confirmed") {
-					return "none"; 
-				} else if (d.status === "no Exoplanet"){
-					return color(d.esi);
-				} else {
-					return "none";
-				}
-			});
 
 		//--EARTH selection ?--//
 		// svg.select([0])
@@ -152,6 +118,20 @@
 
 
 </script>
+
+<ul>
+	<li>
+		<p>x = periode</p>
+	</li>
+	<li>
+		<p>y = esi</p>
+	</li>
+	<li>
+		<p>radius = mass</p>
+	</li>
+</ul>
+
+
 
 </body>
 </html>
