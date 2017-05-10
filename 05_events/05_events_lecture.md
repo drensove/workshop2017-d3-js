@@ -29,7 +29,7 @@
 
 ## Events
 
-Selections in d3 can handle events by using `selection.on('typename', listenerfunction)`, see the documentation about possible [event types](https://developer.mozilla.org/en-US/docs/Web/Events)
+Selections in d3 can handle events by using `selection.on('typename', listenerfunction)`, see the documentation about possible [event types.](https://developer.mozilla.org/en-US/docs/Web/Events)
 
 ### Commonly used types
 Mouse Events:
