@@ -1,4 +1,5 @@
-type,date_original,date,name,sex,country_killed,organization,nationality,medium,job,coverage,freelance,local_foreign,source_fire,type_death,impunity_for_murder,taken_captive,threatened,tortured
+type,date_original,date,name,sex,country_killed,organization,nationality,medium,job,coverage,freelance,local_foreign,source_fire,type_death,impunity_for_murder,taken_captive,threatened,torture,
+
 Motive Confirmed," 2016-10-22"," 2016-10-22",Ali Risan,Male,Iraq,Al-Sumaria TV,Iraqi,"Television, Internet",Camera Operator,War,No,Local,Political Group,Crossfire/Combat-Related,,,,"
 "
 Motive Confirmed," 2016-10-21"," 2016-10-21",Ahmet Haceroğlu,Male,Iraq,Türkmeneli TV,Iraqi,Television,Producer,"Politics, War",No,Local,Political Group,Crossfire/Combat-Related,,,,"

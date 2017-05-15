@@ -1,4 +1,5 @@
 type,date_original,date,name,sex,country_killed,organization,nationality,medium,job,coverage,freelance,local_foreign,source_fire,type_death,impunity_for_murder,taken_captive,threatened,tortured,
+
 Motive Confirmed,"October 22, 2016","October 22, 2016",Ali Risan,Male,Iraq,Al-Sumaria TV,Iraqi,"Television, Internet",Camera Operator,War,No,Local,Political Group,Crossfire/Combat-Related,,,,"
 ",
 Motive Confirmed,"October 21, 2016","October 21, 2016",Ahmet Haceroğlu,Male,Iraq,Türkmeneli TV,Iraqi,Television,Producer,"Politics, War",No,Local,Political Group,Crossfire/Combat-Related,,,,"
@@ -88,7 +89,7 @@ Motive Confirmed,"November 10, 2015","November 10, 2015",Israel Gonçalves Silva
 Motive Confirmed,"November  6, 2015","November  6, 2015",Ahmed Abu al-Hamza,Male,Syria,"SMART News Agency, Hama Media Center",Syria,Internet,"Camera Operator, Photographer",War,No,Local,Military Officials,Crossfire/Combat-Related,,No,No,"No
 ",
 Motive Confirmed,"November  3, 2015","November  3, 2015",Batoul Mokhles al-Warrar,Female,Syria,Noor al-Sham, Radio Damascus,Syria,"Radio, Television",Broadcast,"Politics, War",No,Local,Political Group,Crossfire/Combat-Related,,,,"
-"
+",
 Motive Confirmed,"November  3, 2015","November  3, 2015",Zaman Mehsud,Male,Pakistan,"Daily Ummat, Daily Nai Baat",Pakistan,Print,Print Reporter,"Human Rights, Politics",Yes,Local,Political Group,Murder,Yes,No,No,"No
 ",
 Motive Confirmed,"November  1, 2015","November  1, 2015",Mustaf Abdi Noor ,Male,Somalia,Freelance ,Somalia,"Television, Internet","Camera Operator, Photographer","Politics, War",Yes,Local,Political Group,Dangerous Assignment,,,,"
@@ -126,7 +127,7 @@ Motive Confirmed,"August  6, 2015","August  6, 2015",Gleydson Carvalho,Male,Braz
 Motive Confirmed,"July 31, 2015","July 31, 2015",Rubén Espinosa Becerril,Male,Mexico,"Proceso, AVC Noticias, Cuartoscuro",Mexico,Print,Photographer,"Culture, Human Rights, Politics",No,Local,Unknown Fire,Murder,Yes,No,Yes,"Yes
 ",
 Motive Confirmed,"July 27, 2015","July 27, 2015",Thaer al-Ajlani,Male,Syria,Sham FM, al-Watan,Syria,"Print, Radio, Television","Broadcast, Camera Operator, Print Reporter",War,Yes,Local,Political Group,Crossfire/Combat-Related,,,,"
-"
+",
 Motive Confirmed,"July 15, 2015","July 15, 2015",Jalaa al-Abadi,Male,Iraq,Nineveh Reporters Network,Iraq,Internet,"Camera Operator, Photographer","Human Rights, Politics, War",No,Local,Political Group,Murder,Yes,Yes,Yes,"No
 ",
 Motive Confirmed,"July  2, 2015","July  2, 2015",Filadelfo Sánchez Sarmiento,Male,Mexico,La Favorita 103.3FM La Voz de la Sierra Sur,Mexico,"Print, Radio","Broadcast, Print Reporter",Politics,No,Local,Unknown Fire,Murder,Yes,No,Yes,"No
@@ -172,7 +173,7 @@ Motive Confirmed,"April  1, 2015","April  1, 2015",Jamal Khalifeh,Male,Syria,Fre
 Motive Confirmed,"March 30, 2015","March 30, 2015",Washiqur Rahman Babu,Male,Bangladesh,Freelance,Bangladesh,Internet,Internet Reporter,"Culture, Human Rights, Politics",Yes,Local,Political Group,Murder,Yes,No,Yes,"No
 ",
 Motive Confirmed,Unknown,,Fadel al-Hadidi,Male,Iraq,Mosul al-Youm, Sada al-Iraq,Iraq,Print,"Columnist, Editor, Print Reporter","Corruption, Human Rights, Politics, War",No,Local,Political Group,Murder,Yes,Yes,No,"No
-"
+",
 Motive Confirmed,"March 10, 2015","March 10, 2015",Danilo López,Male,Guatemala,Prensa Libre,Guatemala,Print,Print Reporter,"Corruption, Crime, Politics",No,Local,"Criminal Group, Government Officials",Murder,Yes,No,Yes,"No
 ",
 Motive Confirmed,"March  8, 2015","March  8, 2015",Noureddine Hashim,Male,Syria,Al Etihad Press ,Syria,"Television, Internet","Broadcast, Photographer, Internet Reporter",War,No,Local,Government Officials,Crossfire/Combat-Related,,No,No,"No
@@ -2260,7 +2261,7 @@ Motive Confirmed,"October 3, 1993","October 3, 1993",Vladimir Drobyshev,Male,Rus
 Motive Confirmed,"October  3, 1993","October  3, 1993",Igor Belozyorov,Male,Russia,Ostankino State Broadcasting Company,Russia,Television,Producer,Politics,No,Local,Military Officials,Dangerous Assignment,,No,No,"No
 ",
 Motive Confirmed,"October 3, 1993","October 3, 1993",Rory Peck,Male,Russia,ARD Television Company,Ireland, United Kingdom,Television,Camera Operator,Politics,No,Foreign,Military Officials,Dangerous Assignment,,No,No,"No
-"
+",
 Motive Confirmed,"September 30, 1993","September 30, 1993",Bienvenido Lemos,Male,Colombia,Caracol Radio,Colombia,Radio,Broadcast,,No,Local,Unknown Fire,Murder,Yes,No,No,"No
 ",
 Motive Confirmed,"September 28, 1993","September 28, 1993",Abderrahmane Chergou,Male,Algeria,Freelance,Algeria,Print,Print Reporter,Politics,Yes,Local,Unknown Fire,Murder,Yes,No,No,"No
@@ -2662,7 +2663,7 @@ Motive Unconfirmed,"December 24, 2015","December 24, 2015",Mashiur Rahman Utsho,
 Motive Unconfirmed,"November 21, 2015","November 21, 2015",Orislândio Timóteo Araujo,,Brazil,Blog do Roberto Lano,Brazil,,,,,,,,,,,"
 ",
 Motive Unconfirmed,"October 31, 2015","October 31, 2015",Jose Bernardo,,Philippines,DWBL and DWIZ Radio, Bandera Pilipino,,,,,,,,,,,,"
-"
+",
 Motive Unconfirmed,"October 13, 2015","October 13, 2015",Christophe Nkezabahizi,,Burundi,Radio Television Nationale du Burundi ,Burundi,,,,,,,,,,,"
 ",
 Motive Unconfirmed,"October  3, 2015","October  3, 2015",Hemant Yadav,,India,TV24,India,,,,,,,,,,,"
