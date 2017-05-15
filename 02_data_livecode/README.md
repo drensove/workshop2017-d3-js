@@ -12,10 +12,10 @@ visualization of the earth like exoplanets
 
 ## github project
 
-data visualisation: [ESI_data Beta_03](https://github.com/drensove/workspace2017-d3-js/blob/presenting_ESI_data/02_data_livecode/index.html).
+CODE: [ESI_data Beta_03](https://github.com/drensove/workspace2017-d3-js/blob/presenting_ESI_data/02_data_livecode/index.html).
 
 
-## to see it, make a local Server
+## to see it, downloade the project file and make a local Server
 
 * how install a local webserver on mac
     * on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project file
