@@ -42,6 +42,8 @@
 		var margin = {top: 50, left: 150, bottom: 80, right: 10};
 		var width = 960 - margin.left - margin.right;
 		var height = 500 - margin.top - margin.bottom;
+		
+		var countDeath = {};
 
 		// var color = d3.scaleOrdinal(d3.schemeCategory10); 
 		var colorPetal = d3.scaleThreshold()
@@ -57,28 +59,78 @@
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
- 	d3.csv('esi.csv', function(error, data) {
+ 	d3.csv('journalists_kills.csv', function(error, data) { //loading csv data.
  		if (error) console.log(error);
 		  	  		console.log(data);
 
- 		data.forEach(function(d) {
- 			d.name = d.name;
-			d.esi = +d.esi;
-			d.mass = +d.mass;
-			d.radius = +d.radius;
-			d.period = +d.period;
- 		});
+ 		 data.forEach(function(d) {
+ 		 	//d.type = d.type;
+ 		 	// d.date_original = d.date_original;
+ 		 	// d.date = d.date;
+ 		 	// d.name = d.name;
+ 		 	// d.sex = d.sex;
+ 		 	// d.country_killed = d.country_killed;
+ 		 	// d.organization = d.organization;
+ 		 	d.nationality = d.nationality;
+ 		 	d.medium = d.medium;
+ 		 	d.job = d.job;
+ 		 	// d.coverage = d.coverage;
+ 		 	// d.freelance = d.freelance;
+ 		 	// d.local_foreign = d.local_foreign;
+ 		 	// d.source_fire = d.source_fire;
+ 		 	d.type_death = d.type_death;
+ 		 	// d.impunity_for_murder = d.impunity_for_murder;
+ 		 	// d.taken_captive = d.taken_captive;
+ 		 	// d.threatened = d.threatened;
+ 		 	// d.tortured = d.tortured;
+
+ 		 	//Count my kills
+ 		 	var countDeath = d.type;
+
+ 		 	// if(d.type === "Motive Confirmed"){
+     //    	countDeath[d.type] = countDeath[d.type] + 1;
+    	// 	} 
+    	// 	if (d.type === "Media Workers"){
+    	// 	countDeath[d.type] = countDeath[d.type] + 1;
+    	// 	} 
+    	// 	else (d.type === "Motive Unconfirmed"){
+    	// 	countDeath[d.type] = countDeath[d.type] + 1;
+    	// 	}
+		  		
+
+       		
+    		//	if (d.status === "confirmed") {
+			// 		return "none"; 
+			// 	} else if (d.status === "no Exoplanet"){
+			// 		return colorPetal(d.esi);
+			// 	} else {
+			// 		return "none";
+			// 	}
+ 		 });
+
+ 		 data.forEach(function(d){
+ 		 	var countDeath = 0;
+
+ 		 	if (d.type === "Motive Confirmed"){
+ 		 		countDeath = d.type++;
+ 		 		console.log(countDeath);
+ 		 	}
+ 		 });
+
+ 		 //ich will die tode zählen von einer bestimmten art.
 
     //scaling
 	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	  	.domain([0, d3.max(data, function(d) {return d.period; })]); // start by axis x=0
-	  //	.domain([0.55, d3.max(data, function (d) {return d.esi;})+0.01]); //example
+	 	  	// .domain(d3s.extent(data, function (d) {return d.nationality; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.nationality; })]);
+
 
 	var y = d3.scaleLinear()
-	 	  	.range([height, 0 ])
-	 	  	.domain([0.5, d3.max(data, function (d) {return d.esi;})]); // start by axis y=50
-	 //	 	.domain(d3.extent(data, function (d) {return d.esi; }));
+	 	  	.range([height, 0])
+	 //	  	.domain(d3s.extent(data, function (d) {return d.type; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.type; })]); // start by axis y=50
+	 	 	
 
 	//draw axis
 			svg.append('g')
@@ -95,7 +147,7 @@
       		.attr("x", width/2)
       		.attr("y", height+50)
       		.style("text-anchor", "middle")
-      		.text("Periode Time = one earth year")
+      		.text("nationality")
       		.style("font-size", 16);
 
         svg.append("text")
@@ -103,7 +155,7 @@
       		.attr("y", -50)
       		.attr("x", height/-2)
       		.style("text-anchor", "middle")
-      		.text("ESI Index = earth like planet")
+      		.text("Kills")
       		.style("font-size", 16);
 
 	// Legend //				
@@ -131,38 +183,38 @@
 				return d;
 			});
 
-	//--planets--//
-	 	svg.selectAll('.planet')
+	//--Kills confirmed--//
+	 	svg.selectAll('.kills')
 			.data(data)
 			.enter().append('circle')
-			.attr('class', 'planet')
+			.attr('class', 'kills')
 			.attr('r', function(d){
-				return (d.mass*1);
+				return (d.type*1);
 			}) //making planets bigger
 
 			.attr('cx', function(d){
-				return x (d.period);
+				return x (d.type);
 			})
 			.attr('cy', function(d){
-				return y (d.esi);
+				return y (d.type);
 			})
 
 			.style('fill', 'none')
 			.style('stroke-width', '2')
 			.style('stroke', function (d){
-				return colorPetal(d.esi);
-			})
+				return colorPetal(d.type);
+			});
 
 	//select earth
-			.style("fill", function(d) { 
-				if (d.status === "confirmed") {
-					return "none"; 
-				} else if (d.status === "no Exoplanet"){
-					return colorPetal(d.esi);
-				} else {
-					return "none";
-				}
-			});
+			// .style("fill", function(d) { 
+			// 	if (d.status === "confirmed") {
+			// 		return "none"; 
+			// 	} else if (d.status === "no Exoplanet"){
+			// 		return colorPetal(d.esi);
+			// 	} else {
+			// 		return "none";
+			// 	}
+			// });
 
 		
 
