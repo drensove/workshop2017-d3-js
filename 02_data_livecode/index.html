@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ESI: earth similarity index</title>
+	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css">
+	<script src="../library/d3.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+	<style type="text/css">
+		.dot{
+			stroke: none;
+			fill:steelblue;
+		}
+		.earth{
+			stroke: none;
+			fill:black;
+		}
+	</style>
+</head>
+<body>
+<nav class="nav">
+	<h3>ESI: earth similarity index</h3>
+	<!-- <a href="page01.html">Page 01</a> -->
+	<a href="page02.html">Page 02</a>
+	<a href="page03.html">Page 03</a>
+	<a href="page04.html">Page 04</a>
+	<a href="page05.html">ESI-Planets - Beta 2</a>
+	<a href="page06.html">ESI-Planets - Beta 3</a>
+	<a href="index.html" class="LinkActiv">ESI-Planets</a>
+
+</nav>
+
+<script type="text/javascript">
+
+	window.onload = function () {
+
+		var margin = {top: 50, left: 150, bottom: 80, right: 10};
+		var width = 960 - margin.left - margin.right;
+		var height = 500 - margin.top - margin.bottom;
+
+		// var color = d3.scaleOrdinal(d3.schemeCategory10); 
+		var colorPetal = d3.scaleThreshold()
+			// .range(d3.schemeBlues[9])
+			.range([ "#f69696", "#beab29", "#30b2cd"]) // color range
+			.domain([0.6,0.8]);							
+
+
+		var svg = d3.select('body').append('svg')
+			.attr('height', height + margin.top + margin.bottom)
+ 			.attr('width', width + margin.left + margin.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+ 	d3.csv('esi.csv', function(error, data) {
+ 		if (error) console.log(error);
+		  	  		console.log(data);
+
+ 		data.forEach(function(d) {
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.period = +d.period;
+ 		});
+
+    //scaling
+	var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	  	.domain([0, d3.max(data, function(d) {return d.period; })]); // start by axis x=0
+	  //	.domain([0.55, d3.max(data, function (d) {return d.esi;})+0.01]); //example
+
+	var y = d3.scaleLinear()
+	 	  	.range([height, 0 ])
+	 	  	.domain([0.5, d3.max(data, function (d) {return d.esi;})]); // start by axis y=50
+	 //	 	.domain(d3.extent(data, function (d) {return d.esi; }));
+
+	//draw axis
+			svg.append('g')
+			// .attr('class', 'axis axis--y')
+	 	 	.call(d3.axisLeft(y));
+
+	 	  svg.append('g')
+			// .attr('class', 'axis axis--x')
+	 		.attr('transform', 'translate(0,' + height +')')
+	 	 	.call(d3.axisBottom(x));
+
+	//labelling
+		svg.append("text")             
+      		.attr("x", width/2)
+      		.attr("y", height+50)
+      		.style("text-anchor", "middle")
+      		.text("Periode Time = one earth year")
+      		.style("font-size", 16);
+
+        svg.append("text")
+      		.attr("transform", "rotate(-90)")
+      		.attr("y", -50)
+      		.attr("x", height/-2)
+      		.style("text-anchor", "middle")
+      		.text("ESI Index = earth like planet")
+      		.style("font-size", 16);
+
+	// Legend //				
+		var legend = svg.append('g')
+			.attr('transform', 'translate(' + (width-50) + ',0)')
+
+			.attr('class', 'legend')
+			.selectAll('.info')
+			.data(colorPetal.domain())
+			.enter().append('g')
+			.attr('class', 'info')
+			.attr('transform', function (d, i) {
+				return 'translate(0,' + (i * 20) + ')';
+			});
+		legend.append('rect')
+			.attr('width', 10)
+			.attr('height', 10)
+			.style('fill', function (d) {
+				return colorPetal(d);
+			});
+		legend.append('text')
+			.attr("x", 24)
+			.attr("y", 10)
+			.text(function (d) {
+				return d;
+			});
+
+	//--planets--//
+	 	svg.selectAll('.planet')
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'planet')
+			.attr('r', function(d){
+				return (d.mass*1);
+			}) //making planets bigger
+
+			.attr('cx', function(d){
+				return x (d.period);
+			})
+			.attr('cy', function(d){
+				return y (d.esi);
+			})
+
+			.style('fill', 'none')
+			.style('stroke-width', '2')
+			.style('stroke', function (d){
+				return colorPetal(d.esi);
+			})
+
+	//select earth
+			.style("fill", function(d) { 
+				if (d.status === "confirmed") {
+					return "none"; 
+				} else if (d.status === "no Exoplanet"){
+					return colorPetal(d.esi);
+				} else {
+					return "none";
+				}
+			});
+
+		
+
+	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+	// next time: add a tooltip that show the name of the planet.
+
+	// https://bl.ocks.org/mbostock/3887118 Inspiration | Scatterplot //
+
+ 	}); //--end from csv data
+}; //--end
+
+
+</script>
+
+</body>
+</html>
