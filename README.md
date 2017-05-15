@@ -6,14 +6,14 @@ This repository contains all my material for the course "information visualisati
 To see the projects you have to downloade all files and run a local webserver.
 
 ## install a webserver for mac
-    * on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project
-    * command is ```python -m SimpleHTTPServer <portnumber>```
-    * or if you use pyhton 3 ```python -m http.server <portnumber>``
-    replace  ```<portnumber>``` with a four digit number
-    * check your browser under  ```localhost:<portnumber>```
+* on mac os and linux is a [python](https://www.python.org/) server already installed, you just need to start this server in the directory of your project
+* command is ```python -m SimpleHTTPServer <portnumber>```
+* or if you use pyhton 3 ```python -m http.server <portnumber>``
+replace  ```<portnumber>``` with a four digit number
+* check your browser under  ```localhost:<portnumber>```
 
 ## install a webserver for windows
-	* (no idea, sorry)
+* (no idea, sorry)
 
 ### Tasks:
 01. Visualisation from ESI Index:
