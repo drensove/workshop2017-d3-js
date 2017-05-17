@@ -35,6 +35,14 @@ body{
 	background-color: #eeeeee;
 }
 
+#tooltip {
+			position: absolute;
+			visibility: hidden;
+			background: white;
+			font-size: 12px;
+			padding: 5px 15px
+		}
+
 .nav
 {
 	display: block;

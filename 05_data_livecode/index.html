@@ -34,201 +34,31 @@
 	<a href="index.html" class="LinkActiv">Journalists-Kills</a>
 
 </nav>
+<div id="tooltip"></div>
 
 <script type="text/javascript">
 
 	window.onload = function () {
 
-		var margin = {top: 50, left: 150, bottom: 80, right: 10};
-		var width = 960 - margin.left - margin.right;
-		var height = 500 - margin.top - margin.bottom;
+		var margin = {top: 50, left: 100, bottom: 50, right: 100};
+		var width = window.innerWidth * 0.9 - margin.left - margin.right;
+		var height = window.innerHeight * 0.9 - margin.top - margin.bottom;
 		
-		var countDeath = {};
-
-		// var color = d3.scaleOrdinal(d3.schemeCategory10); 
-		var colorPetal = d3.scaleThreshold()
-			// .range(d3.schemeBlues[9])
-			.range([ "#f69696", "#beab29", "#30b2cd"]) // color range
-			.domain([0.6,0.8]);							
-
-
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+ 		var tooltip = d3.select('#tooltip');
 
- 	d3.csv('journalists_kills.csv', function(error, data) { //loading csv data.
- 		if (error) console.log(error);
-		  	  		console.log(data);
-
- 		 data.forEach(function(d) {
- 		 	d.type = d.type;
- 		 	// d.date_original = d.date_original;
- 		 	// d.date = d.date;
- 		 	// d.name = d.name;
- 		 	// d.sex = d.sex;
- 		 	// d.country_killed = d.country_killed;
- 		 	// d.organization = d.organization;
- 		 	d.nationality = d.nationality;
- 		 	d.medium = d.medium;
- 		 	d.job = d.job;
- 		 	// d.coverage = d.coverage;
- 		 	// d.freelance = d.freelance;
- 		 	// d.local_foreign = d.local_foreign;
- 		 	// d.source_fire = d.source_fire;
- 		 	d.type_death = d.type_death;
- 		 	// d.impunity_for_murder = d.impunity_for_murder;
- 		 	// d.taken_captive = d.taken_captive;
- 		 	// d.threatened = d.threatened;
- 		 	// d.tortured = d.tortured;
-
- 		 	//Count my kills
- 		 	var countDeath = d.type;
-
- 		 	// if(d.type === "Motive Confirmed"){
-     //    	countDeath[d.type] = countDeath[d.type] + 1;
-    	// 	} 
-    	// 	if (d.type === "Media Workers"){
-    	// 	countDeath[d.type] = countDeath[d.type] + 1;
-    	// 	} 
-    	// 	else (d.type === "Motive Unconfirmed"){
-    	// 	countDeath[d.type] = countDeath[d.type] + 1;
-    	// 	}
-		  		
-
-       		
-    		//	if (d.status === "confirmed") {
-			// 		return "none"; 
-			// 	} else if (d.status === "no Exoplanet"){
-			// 		return colorPetal(d.esi);
-			// 	} else {
-			// 		return "none";
-			// 	}
- 		 });
-
- 		 data.forEach(function(d){
- 		 	var countDeath = 0;
-
- 		 	if (d.type === "Motive Confirmed"){
- 		 		countDeath = d.type++;
- 		 		console.log(countDeath);
- 		 	}
- 		 });
-
- 		 //ich will die tode zählen von einer bestimmten art.
-
-    //scaling
-	var x = d3.scaleLinear()
-	 	  	.range([0, width])
-	 	  	// .domain(d3s.extent(data, function (d) {return d.nationality; }));
-	 	  	.domain([0, d3.max(data, function(d) {return d.nationality; })]);
-
-
-	var y = d3.scaleLinear()
-	 	  	.range([height, 0])
-	 //	  	.domain(d3s.extent(data, function (d) {return d.type; }));
-	 	  	.domain([0, d3.max(data, function(d) {return d.type; })]); // start by axis y=50
-	 	 	
-
-	//draw axis
-			svg.append('g')
-			// .attr('class', 'axis axis--y')
-	 	 	.call(d3.axisLeft(y));
-
-	 	  svg.append('g')
-			// .attr('class', 'axis axis--x')
-	 		.attr('transform', 'translate(0,' + height +')')
-	 	 	.call(d3.axisBottom(x));
-
-	//labelling
-		svg.append("text")             
-      		.attr("x", width/2)
-      		.attr("y", height+50)
-      		.style("text-anchor", "middle")
-      		.text("nationality")
-      		.style("font-size", 16);
-
-        svg.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
-      		.style("text-anchor", "middle")
-      		.text("Kills")
-      		.style("font-size", 16);
-
-	// Legend //				
-		var legend = svg.append('g')
-			.attr('transform', 'translate(' + (width-50) + ',0)')
-
-			.attr('class', 'legend')
-			.selectAll('.info')
-			.data(colorPetal.domain())
-			.enter().append('g')
-			.attr('class', 'info')
-			.attr('transform', function (d, i) {
-				return 'translate(0,' + (i * 20) + ')';
-			});
-		legend.append('rect')
-			.attr('width', 10)
-			.attr('height', 10)
-			.style('fill', function (d) {
-				return colorPetal(d);
-			});
-		legend.append('text')
-			.attr("x", 24)
-			.attr("y", 10)
-			.text(function (d) {
-				return d;
-			});
-
-	//--Kills confirmed--//
-	 	svg.selectAll('.kills')
-			.data(data)
-			.enter().append('circle')
-			.attr('class', 'kills')
-			.attr('r', function(d){
-				return (d.type*1);
-			}) //making planets bigger
-
-			.attr('cx', function(d){
-				return x (d.type);
-			})
-			.attr('cy', function(d){
-				return y (d.type);
-			})
-
-			.style('fill', 'none')
-			.style('stroke-width', '2')
-			.style('stroke', function (d){
-				return colorPetal(d.type);
-			});
-
-	//select earth
-			// .style("fill", function(d) { 
-			// 	if (d.status === "confirmed") {
-			// 		return "none"; 
-			// 	} else if (d.status === "no Exoplanet"){
-			// 		return colorPetal(d.esi);
-			// 	} else {
-			// 		return "none";
-			// 	}
-			// });
+ 	
 
 		
 
 	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
 
-	// next time: add a tooltip that show the name of the planet.
-
-	// https://bl.ocks.org/mbostock/3887118 Inspiration | Scatterplot //
-
- 	}); //--end from csv data
-}; //--end
-
 
 </script>
-
 </body>
 </html>
