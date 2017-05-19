@@ -26,11 +26,7 @@
 <nav class="nav">
 	<h3>Journalists Killed since 1992</h3>
 	<a href="page01.html">Page 01</a>
-	<!-- <a href="page02.html">Page 02</a>
-	<a href="page03.html">Page 03</a>
-	<a href="page04.html">Page 04</a>
-	<a href="page05.html">Page 05</a>
-	<a href="page06.html">Page 06</a> -->
+	
 	<a href="index.html" class="LinkActiv">Journalists-Kills</a>
 
 </nav>
@@ -38,7 +34,7 @@
 
 <script type="text/javascript">
 
-	window.onload = function () {
+window.onload = function () {
 
 		var margin = {top: 50, left: 100, bottom: 50, right: 100};
 		var width = window.innerWidth * 0.9 - margin.left - margin.right;
@@ -52,6 +48,47 @@
 
  		var tooltip = d3.select('#tooltip');
 
+ 		d3.csv('journalists_kills_mod5.csv', function(error, data) {
+ 			if (error) console.log(error);
+		  	  			console.log(data);
+
+		  	data.forEach(function(d) {
+ 			d.job = d.Job;
+			d.type = d.Type;
+			d.medium = d.Medium;
+			d.type_death = d.Type_death;
+			d.country_killed = d.Country_killed;
+			d.date = d.Date;
+ 		 	d.name = d.Name;
+ 			});
+
+		  	
+
+//--scaling--//
+		var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	  	// .domain(d3s.extent(data, function (d) {return d.nationality; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.nationality; })]);
+
+		var y = d3.scaleLinear()
+	 	  	.range([height, 0])
+	 		//.domain(d3s.extent(data, function (d) {return d.type; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.type; })]);
+
+//--draw axis--//
+			svg.append('g')
+			// .attr('class', 'axis axis--y')
+	 	 	.call(d3.axisLeft(y));
+
+	 	  svg.append('g')
+			// .attr('class', 'axis axis--x')
+	 		.attr('transform', 'translate(0,' + height +')')
+	 	 	.call(d3.axisBottom(x));
+
+
+
+ 		}); //end from csv
+ }; //end window
  	
 
 		
