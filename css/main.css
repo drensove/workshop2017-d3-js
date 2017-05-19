@@ -74,9 +74,9 @@ body{
 		}
 
 		.axis--x{
-			fill:grey;
+			fill:none;
 		}
 
 		.axis--y{
-			fill:grey;
+			fill:none;
 		}

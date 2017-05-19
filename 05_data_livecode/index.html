@@ -48,43 +48,93 @@ window.onload = function () {
 
  		var tooltip = d3.select('#tooltip');
 
+ 		
+
+
+
  		d3.csv('journalists_kills_mod5.csv', function(error, data) {
  			if (error) console.log(error);
 		  	  			console.log(data);
 
 		  	data.forEach(function(d) {
- 			d.job = d.Job;
-			d.type = d.Type;
-			d.medium = d.Medium;
-			d.type_death = d.Type_death;
-			d.country_killed = d.Country_killed;
-			d.date = d.Date;
- 		 	d.name = d.Name;
+ 			return{
+ 			Job : d.Job,
+			Type : d.Type,
+			Medium : d.Medium,
+			Type_death : d.Type_death,
+			Country_killed : d.Country_killed,
+			Date : d.Date,
+ 		 	Name : d.Name
+ 		 	};
+ 			
  			});
 
-		  	
+ 		
+
+ 			
+
+ 		var helper = {};
+		var Country_killed = [];
+
+		data.forEach(function (d) {
+			if (helper[d.Country_killed] === undefined) {
+			helper[d.Country_killed] = 1;
+			Country_killed.push(d.Country_killed);
+			}
+
+			});
+
+		console.log([Country_killed]);
+
 
 //--scaling--//
-		var x = d3.scaleLinear()
-	 	  	.range([0, width])
-	 	  	// .domain(d3s.extent(data, function (d) {return d.nationality; }));
-	 	  	.domain([0, d3.max(data, function(d) {return d.nationality; })]);
+		
+		var x = d3.scalePoint()
+			.range([0,width])
+			.domain([Country_killed]);
+			
 
-		var y = d3.scaleLinear()
+	 	var y = d3.scaleLinear()
 	 	  	.range([height, 0])
-	 		//.domain(d3s.extent(data, function (d) {return d.type; }));
-	 	  	.domain([0, d3.max(data, function(d) {return d.type; })]);
+	 	  	.domain([0, d3.max(data, function (d) {
+				return d[1];
+			})]);
+
 
 //--draw axis--//
-			svg.append('g')
-			// .attr('class', 'axis axis--y')
-	 	 	.call(d3.axisLeft(y));
+		svg.append('g')
+			.attr('class', 'axis axis--x')
+			.attr('transform', 'translate(0,' + height +')')
+			.call(d3.axisBottom(x));
 
-	 	  svg.append('g')
-			// .attr('class', 'axis axis--x')
-	 		.attr('transform', 'translate(0,' + height +')')
-	 	 	.call(d3.axisBottom(x));
+		svg.append('g')
+			.attr('class', 'axis axis--y')
+			.call(d3.axisLeft(y));
 
+		// svg.selectAll('.bar')
+		// 	.data(data)
+		// 	.enter().append('rect')
+		// 	.attr('class', 'bar')
+		// 	.attr('y', function (d) {
+		// 		return (d[Country_killed]);
+		// 	});
+
+
+//--labelling--//
+		svg.append("text")             
+      		.attr("x", width/2)
+      		.attr("y", height+50)
+      		.style("text-anchor", "middle")
+      		.text("Country")
+      		.style("font-size", 16);
+
+        svg.append("text")
+      		.attr("transform", "rotate(-90)")
+      		.attr("y", -50)
+      		.attr("x", height/-2)
+      		.style("text-anchor", "middle")
+      		.text("Dead Journalists")
+      		.style("font-size", 16);
 
 
  		}); //end from csv
@@ -94,6 +144,21 @@ window.onload = function () {
 		
 
 	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+	//--mouseover--//
+			// .on("mouseover", function(d) {
+
+			// 	d3.select(this)
+			// 		.style("stroke-width", 1)
+			// 		.style("stroke", "black");
+
+		 //       	tooltip
+		 //       		.html("Date: " + formatTime(d.Date) + "<br>" + "Name: " + d.Name + "<br>" + "Local or Foreign: " + d.Local_Foreign + "<br>" + "Organization: " + d.Organization + "<br>")
+		 //       		.style("visibility", "visible")
+		 //            .style("left", (d3.event.pageX + 5) + "px")
+		 //            .style("top", (d3.event.pageY - 28) + "px");
+
+		 //     })
 
 
 </script>
