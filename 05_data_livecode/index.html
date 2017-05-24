@@ -111,13 +111,17 @@ window.onload = function () {
 			.attr('class', 'axis axis--coutries')
 			.call(d3.axisLeft(y));	
 
-		// svg.selectAll('.bar')
-		// 	.data(data)
-		// 	.enter().append('rect')
-		// 	.attr('class', 'bar')
-		// 	.attr('y', function (d) {
-		// 		return (d[Country_killed]);
-		// 	});
+		 svg.selectAll('.dots')
+		 	.data(data)
+		 	.enter().append('circle')
+		 	.attr('class', 'dots');
+			// .attr('x', function (d) {
+			// 	return x(d[0])
+			// })
+			// .attr('y', function (d) {
+			// 	return y(d[1])
+			// })
+			// .attr('width', x.bandwidth());
 
 
 //--labelling--//
