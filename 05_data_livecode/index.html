@@ -34,9 +34,9 @@
 
 window.onload = function () {
 
-		var margin = {top: 50, left: 100, bottom: 150, right: 100};
+		var margin = {top: 40, left: 300, bottom: 40, right: 100};
 		var width = window.innerWidth * 0.9 - margin.left - margin.right;
-		var height = window.innerHeight * 0.9 - margin.top - margin.bottom;
+		var height = window.innerHeight * 2 - margin.top - margin.bottom;
 		
 		var svg = d3.select('body').append('svg')
 			.attr('height', height + margin.top + margin.bottom)
@@ -64,9 +64,11 @@ window.onload = function () {
  			
  			});
 
+ 			
+
 // y-Achse
-	var y = d3.scaleLinear()
-			.range([height, 0])
+	var x = d3.scaleLinear()
+			.range([width, 0])
 			.domain([0, d3.max(data, function (d) {
 			return d[1];
 			})]);
@@ -77,24 +79,23 @@ window.onload = function () {
 		var countries = [];
 
 		data.forEach(function (d) {
-   			if (helper[d.Country_killed] === undefined && d.Country_killed !== '' ) {
-   			
+   			if (helper[d.Country_killed] === undefined && d.Country_killed !== '' ){
+
       		countries.push(d.Country_killed);
-      		helper[d.Country_killed] = 1;
-      		
+      		helper[d.Country_killed] = 1;	
    		}
 			helper[d.Country_killed] = helper[d.Country_killed] + 1;
 		});
-		
 		countries.sort(); 
+
 
 		console.log(helper);
 		console.log(countries);
 
 
-		var x = d3.scaleBand()
-			.range([0, width])
-			.padding(1)
+		var y = d3.scaleBand()
+			.range([0, height])
+			.padding(2)
 			.domain(countries.map(function(d){
 				return d;
 			}));		
@@ -102,12 +103,12 @@ window.onload = function () {
 
 //--draw axis--//
 		svg.append('g')
-			.attr('class', 'axis axis--country')
+			.attr('class', 'axis axis--people')
 			.attr('transform', 'translate(0,' + height +')')
 			.call(d3.axisBottom(x));
 
 		svg.append('g')
-			.attr('class', 'axis axis--people')
+			.attr('class', 'axis axis--coutries')
 			.call(d3.axisLeft(y));	
 
 		// svg.selectAll('.bar')
@@ -121,21 +122,21 @@ window.onload = function () {
 
 //--labelling--//
 		// x-Achse
-		svg.append("text")             
+		svg.append("text")
       		.attr("x", width/2)
-      		.attr("y", height+50)
+      		.attr("y", height+25)
       		.style("text-anchor", "middle")
-      		.text("Country")
-      		.style("font-size", 10);
+      		.text("Kills")
+      		.style("font-size", 16);
 
       	// y-Achse
         svg.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
+      		.attr("transform", "rotate(0)")
+      		.attr("y", -15)
+      		.attr("x", -30)
       		.style("text-anchor", "middle")
-      		.text("Dead Journalists")
-      		.style("font-size", 10);
+      		.text("Countries")
+      		.style("font-size", 16);
 
 
  		}); //end from csv
@@ -144,7 +145,7 @@ window.onload = function () {
 
 		
 
-	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+	//::DEAD CODE:://////////////////////////////////////////////////////////
 
 	//--mouseover--//
 			// .on("mouseover", function(d) {
