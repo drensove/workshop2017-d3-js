@@ -66,7 +66,7 @@
 		var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 		var projection = d3.geoMercator()
-			.translate([width / 3.5, height / .6])
+			.translate([width / 3.5, height / 0.6])
 			.scale((width -1) / 1.7 );
 			//show europ
 			//.translate([width / 2, height / 1.5]) copie
@@ -104,7 +104,7 @@
 					.data(topojson.feature(world, world.objects.countries).features)
 					.enter().append("path")
 					.attr("class", function (d) {
-						return 'l_' + d.id + ' land'
+						return 'l_' + d.id + ' land';
 					})
 					.attr("d", path)
 					.on('click', function (d) {
@@ -137,9 +137,9 @@
 						svg.selectAll('.l_' + d.iso_n3)
 							.style('fill', function () {
 								return color(d.continent);
-							})
+							});
 					}
-				})
+				});
 
 			});
 
