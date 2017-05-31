@@ -2,223 +2,156 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>journalists kills</title>
-	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
-	<!--<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
-	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
-	<link href="../css/main.css" rel="stylesheet" type="text/css" >
+	<title>Maps</title>
+
+	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
 	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
 	<script src="../library/d3.min.js"></script>
-	<script src="../library/d3-scale-chromatic.v1.min.js"></script>
 
-	<style type="text/css">
-		.dot{
-			stroke: none;
-			fill:steelblue;
+	<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+	<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+	<script src="//d3js.org/topojson.v1.min.js"></script>
+
+	<style>
+
+		body {
+			background: #f5f5f5;
 		}
-		.dot2{
-			stroke: none;
-			fill:black;
+
+		svg {
+			background: #fff;
 		}
+
+		.land {
+			fill: #000;
+		}
+
+		.boundary {
+			fill: none;
+			stroke: #fff;
+			stroke-linejoin: round;
+			stroke-linecap: round;
+			vector-effect: non-scaling-stroke;
+		}
+
+		.overlay {
+			fill: none;
+			pointer-events: all;
+		}
+
 	</style>
+
 </head>
 <body>
 <nav class="nav">
-	<h3>Journalists Killed since 1992</h3>
+	<h3>World-maps</h3>
 	<a href="page01.html">Page 01</a>
-	<a href="index.html" class="LinkActiv">Journalists-Kills</a>
+	<!-- <a href="page02.html">Page 02</a>
+	<a href="page03.html">Page 03</a>
+	<a href="page04.html">Page 04</a>
+	<a href="page05.html">Page 05</a>
+	<a href="page06.html">Page 06</a> -->
+	<a href="index.html" class="LinkActiv">home</a>
+
 </nav>
-<div id="tooltip"></div>
 
-<script type="text/javascript">
+<script>
+	window.onload = function () {
 
-window.onload = function () {
+		var width = 1060,
+			height = 600;
 
-		var margin = {top: 40, left: 300, bottom: 40, right: 100};
-		var width = window.innerWidth * 0.9 - margin.left - margin.right;
-		var height = window.innerHeight * 2 - margin.top - margin.bottom;
-		
-		var svg = d3.select('body').append('svg')
-			.attr('height', height + margin.top + margin.bottom)
- 			.attr('width', width + margin.left + margin.right)
- 			.append('g')
- 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		var color = d3.scaleOrdinal(d3.schemeCategory10);
 
- 		var tooltip = d3.select('#tooltip');
+		var projection = d3.geoMercator()
+			.translate([width / 3.5, height / .6])
+			.scale((width -1) / 1.7 );
+			//show europ
+			//.translate([width / 2, height / 1.5]) copie
+			//.scale((width -1) / 0.5 / Math.PI); copie
+
+		var zoom = d3.zoom()
+			.scaleExtent([1, 8])
+			.on("zoom", zoomed);
+
+		var path = d3.geoPath()
+			.projection(projection);
+
+		var svg = d3.select("body").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g");
+
+		svg.append("rect")
+			.attr("class", "overlay")
+			.attr("width", width)
+			.attr("height", height);
+
+		var g = svg.append("g");
+
+		svg.call(zoom);
+
+		d3.queue()
+			.defer(d3.json, 'world50m.json')
+			.defer(d3.tsv, '50m_original.tsv')
+			.await(function (error, world, data) {
+				if (error) throw error;
+
+				g.append("g")
+					.selectAll("path")
+					.data(topojson.feature(world, world.objects.countries).features)
+					.enter().append("path")
+					.attr("class", function (d) {
+						return 'l_' + d.id + ' land'
+					})
+					.attr("d", path)
+					.on('click', function (d) {
+						console.log(d);
+					});
+
+				g.append("path")
+					.datum(topojson.mesh(world, world.objects.countries, function (a, b) {
+						return a !== b;
+					}))
+					.attr("class", "boundary")
+					.attr("d", path);
+//
+//				g.append('circle')
+//					.datum([13.40, 52.52]) // [longitude, latitude]
+//					.attr('cx', function (d) {
+//						// long
+//						return projection([d[0], d[1]])[0];
+//					})
+//					.attr('cy', function (d) {
+//						// lat
+//						return projection([d[0], d[1]])[1];
+//					})
+//					.attr('r', 4)
+//					.style('fill', '#ff00ff');
 
 
- 		d3.csv('journalists_kills_mod5.csv', function(error, data) {
- 			if (error) console.log(error);
-		  	  			console.log(data);
+				data.forEach(function (d) {
+					if (d.iso_n3 != '-99') {
+						svg.selectAll('.l_' + d.iso_n3)
+							.style('fill', function () {
+								return color(d.continent);
+							})
+					}
+				})
 
-		  	data.forEach(function(d) {
- 			return{
- 			Job : d.Job,
-			Type : d.Type,
-			Medium : d.Medium,
-			Type_death : d.Type_death,
-			Country_killed : d.Country_killed,
-			Date : d.Date,
- 		 	Name : d.Name
- 		 	};
- 			
- 			});
+			});
 
- 			
-
-
-	
-
-// y-Achse
- 		var helper = {};
-		var countries = [];
-
-		data.forEach(function (d) {
-   			if (helper[d.Country_killed] === undefined && d.Country_killed !== '' ){
-
-      		// countries.push(d.Country_killed);
-      		helper[d.Country_killed] = 0;	
-   		}
-			helper[d.Country_killed] = helper[d.Country_killed] + 1;
-		});
-		// countries.sort(); 
-
-		for(var key in helper){
-			if(helper.hasOwnProperty(key)){
-				countries.push([key, helper[key]])
-			}
+		function zoomed() {
+			g.selectAll('circle')
+				.attr('r', function () {
+					return 4 / d3.event.transform.k;
+				});
+			g.attr("transform", d3.event.transform);
 		}
-
-
-		console.log(helper);
-		console.log(countries);
-
-
-		var y = d3.scaleBand()
-			.range([0, height])
-			.padding(2)
-			.domain(countries.map(function(d){
-				return d[0];
-			}));
-
-			// x-Achse
-	var x = d3.scaleLinear()
-			.range([0, width])
-			.domain([0, d3.max(countries, function (d) {
-			return d[1];
-			})]);		
-
-
-//--draw axis--//
-		svg.append('g')
-			.attr('class', 'axis axis--people')
-			.attr('transform', 'translate(0,' + height +')')
-			.call(d3.axisBottom(x));
-
-		svg.append('g')
-			.attr('class', 'axis axis--coutries')
-			.call(d3.axisLeft(y));	
-
-		 svg.selectAll('.dots')
-		 	.data(countries)
-		 	.enter().append('circle')
-		 	.attr('class', 'dots')
-			.attr('cx', function (d) {
-				return x(d[1]);
-			})
-			.attr('cy', function (d) {
-				return y(d[0]);
-			})
-			.attr('r', 2);
-			// .attr('width', x.bandwidth());
-
-
-//--labelling--//
-		// x-Achse
-		svg.append("text")
-      		.attr("x", width/2)
-      		.attr("y", height+25)
-      		.style("text-anchor", "middle")
-      		.text("Kills")
-      		.style("font-size", 16);
-
-      	// y-Achse
-        svg.append("text")
-      		.attr("transform", "rotate(0)")
-      		.attr("y", -15)
-      		.attr("x", -30)
-      		.style("text-anchor", "middle")
-      		.text("Countries")
-      		.style("font-size", 16);
-
-
- 		}); //end from csv
- }; //end window
- 	
-
-		
-
-	//::DEAD CODE:://////////////////////////////////////////////////////////
-
-	//--mouseover--//
-			// .on("mouseover", function(d) {
-
-			// 	d3.select(this)
-			// 		.style("stroke-width", 1)
-			// 		.style("stroke", "black");
-
-		 //       	tooltip
-		 //       		.html("Date: " + formatTime(d.Date) + "<br>" + "Name: " + d.Name + "<br>" + "Local or Foreign: " + d.Local_Foreign + "<br>" + "Organization: " + d.Organization + "<br>")
-		 //       		.style("visibility", "visible")
-		 //            .style("left", (d3.event.pageX + 5) + "px")
-		 //            .style("top", (d3.event.pageY - 28) + "px");
-
-		 //     })
-
-
-	// var deathJournalists = {};
-		// var death = [];
-
-		// data.forEach(function (d) {
-		// 	if (deathJournalists[d.Country_killed] === undefined) {
-		// 		death++;
-		// 	}
-		// });
-
-		//console.log(deathJournalists);
-
-	//--scaling--//
-		
-		// var x = d3.scalePoint()
-		// 	.range([0,width])
-		// 	.domain([Country_killed]);
-
-		// var x = d3.scaleBand()
-		// 			.rangeRound([0, width])
-		// 			.domain(type1.map(function (d) {
-		// 				return d;
-		// 			}));
-
-		// var x = d3.scaleBand()
-		// 	.rangeRound([0, width])
-		// 	.domain([Country_killed]);
-
-
-	// data.forEach(function (d) {
-		// 	if (helper[d.Country_killed] === undefined && d.Country_killed !== '') {
-		// 	helper[d.Country_killed] = 0;
-		// 	countries.push(d.Country_killed);
-		// 	}
-
-			// for (var death = 0; death < );
-
-			// helper[d.Country_killed] = helper[d.Country_killed] + 1;
-			// if (d.Country_killed !== '') {
-			// 	helper[d.Country_killed] = helper[d.Country_killed] +1;
-			// }
-			// });
-
-
+	};
 </script>
+
 </body>
 </html>
