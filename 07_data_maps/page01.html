@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>journalists kills</title>
+	<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+	<!--<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
+	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/6.0.0/normalize.min.css">-->
+	<link href="../css/main.css" rel="stylesheet" type="text/css" >
+	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
+	<script src="../library/d3.min.js"></script>
+	<script src="../library/d3-scale-chromatic.v1.min.js"></script>
+
+	<style type="text/css">
+		.dot{
+			stroke: none;
+			fill:steelblue;
+		}
+		.dot2{
+			stroke: none;
+			fill:black;
+		}
+	</style>
+</head>
+<body>
+<nav class="nav">
+	<h3>Journalists Killed since 1992</h3>
+	<a href="page01.html">Page 01</a>
+	<!-- <a href="page02.html">Page 02</a>
+	<a href="page03.html">Page 03</a>
+	<a href="page04.html">Page 04</a>
+	<a href="page05.html">Page 05</a>
+	<a href="page06.html">Page 06</a> -->
+	<a href="index.html" class="LinkActiv">Journalists-Kills</a>
+
+</nav>
+<div id="tooltip"></div>
+
+<script type="text/javascript">
+
+	window.onload = function () {
+
+		var margin = {top: 50, left: 100, bottom: 50, right: 100};
+		var width = window.innerWidth * 0.9 - margin.left - margin.right;
+		var height = window.innerHeight * 0.9 - margin.top - margin.bottom;
+		
+		var svg = d3.select('body').append('svg')
+			.attr('height', height + margin.top + margin.bottom)
+ 			.attr('width', width + margin.left + margin.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+ 		var tooltip = d3.select('#tooltip');
+
+ 	d3.csv('journalists_kills_mod5.csv', function(d) {
+ 		 return {
+ 		 	job : d.Job,
+ 		 	type : d.Type,
+ 		 	medium : d.Medium,
+ 		 	type_death : d.Type_death,
+ 		 	//nationality : d.nationality,
+ 		 	country_killed : d.Country_killed,
+ 		 	// d.date_original : d.date_original,
+ 		 	date : d.Date,
+ 		 	name : d.Name,
+ 		 	},
+ 		 
+ 		  function (error, data){
+ 		  	if (error) console.log(error);
+
+		  	  			console.log(data);
+
+		  	var countDeath = 0;
+
+		  	data.forEach(function (d) {
+		  		if (d.type === "Motive Confirmed"){
+ 		 		countDeath++;
+ 		 		
+ 		 		}
+ 			})
+ 			console.log(countDeath);		
+ 
+
+    //scaling
+	var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	  	// .domain(d3s.extent(data, function (d) {return d.nationality; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.nationality; })]);
+
+
+	var y = d3.scaleLinear()
+	 	  	.range([height, 0])
+	 //	  	.domain(d3s.extent(data, function (d) {return d.type; }));
+	 	  	.domain([0, d3.max(data, function(d) {return d.type; })]); // start by axis y=50
+	 	 	
+
+	//draw axis
+			svg.append('g')
+			// .attr('class', 'axis axis--y')
+	 	 	.call(d3.axisLeft(y));
+
+	 	  svg.append('g')
+			// .attr('class', 'axis axis--x')
+	 		.attr('transform', 'translate(0,' + height +')')
+	 	 	.call(d3.axisBottom(x));
+
+	//labelling
+		svg.append("text")             
+      		.attr("x", width/2)
+      		.attr("y", height+50)
+      		.style("text-anchor", "middle")
+      		.text("nationality")
+      		.style("font-size", 16);
+
+        svg.append("text")
+      		.attr("transform", "rotate(-90)")
+      		.attr("y", -50)
+      		.attr("x", height/-2)
+      		.style("text-anchor", "middle")
+      		.text("Kills")
+      		.style("font-size", 16);
+
+	// Legend //				
+		var legend = svg.append('g')
+			.attr('transform', 'translate(' + (width-50) + ',0)')
+
+			.attr('class', 'legend')
+			.selectAll('.info')
+			.data(colorPetal.domain())
+			.enter().append('g')
+			.attr('class', 'info')
+			.attr('transform', function (d, i) {
+				return 'translate(0,' + (i * 20) + ')';
+			});
+		legend.append('rect')
+			.attr('width', 10)
+			.attr('height', 10)
+			.style('fill', function (d) {
+				return colorPetal(d);
+			});
+		legend.append('text')
+			.attr("x", 24)
+			.attr("y", 10)
+			.text(function (d) {
+				return d;
+			});
+
+	//--Kills confirmed--//
+	 	svg.selectAll('.kills')
+			.data(data)
+			.enter().append('circle')
+			.attr('class', 'kills')
+			.attr('r', function(d){
+				return (d.type*1);
+			}) //making planets bigger
+
+			.attr('cx', function(d){
+				return x (d.type);
+			})
+			.attr('cy', function(d){
+				return y (d.type);
+			})
+
+			.style('fill', 'none')
+			.style('stroke-width', '2')
+			.style('stroke', function (d){
+				return colorPetal(d.type);
+			});
+
+		};
+
+	//select earth
+			// .style("fill", function(d) { 
+			// 	if (d.status === "confirmed") {
+			// 		return "none"; 
+			// 	} else if (d.status === "no Exoplanet"){
+			// 		return colorPetal(d.esi);
+			// 	} else {
+			// 		return "none";
+			// 	}
+			// });
+
+		
+
+	//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+	// next time: add a tooltip that show the name of the planet.
+
+	// https://bl.ocks.org/mbostock/3887118 Inspiration | Scatterplot //
+
+
+ 	 //--end from csv data
+}); //--end
+};
+
+</script>
+</body>
+</html>
