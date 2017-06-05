@@ -105,7 +105,7 @@
 
 		console.log(helper);
 		console.log(countries);
-		console.log(deadPeople);
+		console.log(deadPeople +' '+ 'killed people');
 
 
 			// x-Achse
@@ -190,12 +190,12 @@
 				.attr('r', 7);
 
 				tooltip
-		       		.html("killed: " + deadPeople + "<br>" + "number: " + deadPeople + "<br>")
+		       		.html("killed: " + deadPeople + "<br>")
 		       		.style("visibility", "visible")
 		            .style("left", (d3.event.pageX + 5) + "px")
 		            .style("top", (d3.event.pageY - 28) + "px");
-			
 			})
+			
 			
 			.on('mouseout', function (d) 
 			{
@@ -205,11 +205,8 @@
 
 			svg.selectAll('.dot-kill')
 			.style('fill-opacity', 0.5)
-			.attr('r', 5);
-			
+			.attr('r', 5);			
 			 });
-
-
 
 
 //--labelling--//
@@ -239,63 +236,7 @@
 
 	//::DEAD CODE:://////////////////////////////////////////////////////////
 
-	//--mouseover--//
-			// .on("mouseover", function(d) {
 
-			// 	d3.select(this)
-			// 		.style("stroke-width", 1)
-			// 		.style("stroke", "black");
-
-		 //       	tooltip
-		 //       		.html("Date: " + formatTime(d.Date) + "<br>" + "Name: " + d.Name + "<br>" + "Local or Foreign: " + d.Local_Foreign + "<br>" + "Organization: " + d.Organization + "<br>")
-		 //       		.style("visibility", "visible")
-		 //            .style("left", (d3.event.pageX + 5) + "px")
-		 //            .style("top", (d3.event.pageY - 28) + "px");
-
-		 //     })
-
-
-	// var deathJournalists = {};
-		// var death = [];
-
-		// data.forEach(function (d) {
-		// 	if (deathJournalists[d.Country_killed] === undefined) {
-		// 		death++;
-		// 	}
-		// });
-
-		//console.log(deathJournalists);
-
-	//--scaling--//
-		
-		// var x = d3.scalePoint()
-		// 	.range([0,width])
-		// 	.domain([Country_killed]);
-
-		// var x = d3.scaleBand()
-		// 			.rangeRound([0, width])
-		// 			.domain(type1.map(function (d) {
-		// 				return d;
-		// 			}));
-
-		// var x = d3.scaleBand()
-		// 	.rangeRound([0, width])
-		// 	.domain([Country_killed]);
-
-
-	// data.forEach(function (d) {
-		// 	if (helper[d.Country_killed] === undefined && d.Country_killed !== '') {
-		// 	helper[d.Country_killed] = 0;
-		// 	countries.push(d.Country_killed);
-		// 	}
-
-			// for (var death = 0; death < );
-
-			// helper[d.Country_killed] = helper[d.Country_killed] + 1;
-			// if (d.Country_killed !== '') {
-			// 	helper[d.Country_killed] = helper[d.Country_killed] +1;
-			// }
-			// });
 
 
 </script>
