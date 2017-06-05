@@ -51,9 +51,10 @@
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
- 		// var deadPeople = d3.selectAll()
+ 		
  		var tooltip = d3.select('#tooltip');
 
+ 	
 
  	d3.csv('journalists_kills_mod5.csv', function(error, data) {
  			if (error) console.log(error);
@@ -92,6 +93,8 @@
 			}
 		}
 
+		// var deadPeople = d3.push(helper);
+
 		// countries.sort(); 
 
 
@@ -126,6 +129,9 @@
 		// 	.attr('class', 'axis axis--coutries')
 		// 	.call(d3.axisLeft(y));
 
+		function make_y_gridlines() {		
+		  return d3.axisLeft(y)
+		        .scale(y);}
 
 		//x-axis
 		svg.append('g')
@@ -133,7 +139,6 @@
 			.attr('class', 'x axis axis--people')
 			.attr('transform', 'translate(0,' + height + ')');
 			
-
 		//y-axis
 		svg.append('g')
 			.call(d3.axisLeft(y))
@@ -143,6 +148,13 @@
 				.attr("transform", function(d) {
              return "translate(" + this.getBBox().height*-0.4 + "," + this.getBBox().height*-0 + ")";
          	});
+
+		//draw grid
+		svg.append("g")			
+      		.attr("class", "grid")
+      		.call(make_y_gridlines()
+          	.tickSize(-width, 0, 0)
+          	.tickFormat(""));
 
 
 		//draw dots
@@ -160,7 +172,38 @@
 			})
 			.attr('r', 5)
 			.style('fill', 'red')
-			.style('fill-opacity', 0.5);
+			.style('fill-opacity', 0.5)
+			
+			.on('mouseover', function (d) 
+			{
+				svg.selectAll('.dot-kill')
+				.style('fill-opacity', 0.2);
+			
+				d3.select(this)
+				.style('fill-opacity', 1)
+				.attr('r', 7);
+
+				tooltip
+		       		.html("killed: " + d.helper + "<br>" + "number: " + d.helper + "<br>")
+		       		.style("visibility", "visible")
+		            .style("left", (d3.event.pageX + 5) + "px")
+		            .style("top", (d3.event.pageY - 28) + "px");
+			
+			})
+			
+			.on('mouseout', function (d) 
+			{
+			d3.select(this)
+				.style("stroke-width", 0);
+			tooltip.style("visibility", "hidden");
+
+			svg.selectAll('.dot-kill')
+			.style('fill-opacity', 0.5)
+			.attr('r', 5);
+			
+			 });
+
+
 
 
 //--labelling--//
