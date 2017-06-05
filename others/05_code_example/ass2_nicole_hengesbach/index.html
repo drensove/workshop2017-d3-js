@@ -36,7 +36,6 @@
 
 <script type="text/javascript">
 	window.onload = function () {
-	
 		var margin = {top: 50, bottom: 90, left: 140, right: 10};
 		var height = 780 - margin.top - margin.bottom;
 		var	width = 1360 - margin.left - margin.right;
@@ -99,7 +98,7 @@
 
 		function make_y_gridlines() {		
 		  return d3.axisLeft(y)
-		        .scale(y)}
+		        .scale(y);}
 
 		svg.append('g')
 			.call(d3.axisBottom(x))
@@ -119,6 +118,8 @@
       		.call(make_y_gridlines()
           	.tickSize(-width, 0, 0)
           	.tickFormat(""));
+
+
 
 		svg.selectAll('.line')
 			.data(data)

@@ -46,10 +46,10 @@
 </head>
 <body>
 <nav class="nav">
-	<h3>World-maps</h3>
+	<h3>World Star shower</h3>
 	<a href="page01.html">Page 01</a>
-	<!-- <a href="page02.html">Page 02</a>
-	<a href="page03.html">Page 03</a>
+	<a href="page02.html">Page 02</a>
+	<!-- <a href="page03.html">Page 03</a>
 	<a href="page04.html">Page 04</a>
 	<a href="page05.html">Page 05</a>
 	<a href="page06.html">Page 06</a> -->
@@ -66,11 +66,11 @@
 		var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 		var projection = d3.geoMercator()
-			.translate([width / 3.5, height / 0.6])
-			.scale((width -1) / 1.7 );
+			.translate([width / 3.2, height / 0.65])
+			.scale((width -1) / 1.6 );
 			//show europ
-			//.translate([width / 2, height / 1.5]) copie
-			//.scale((width -1) / 0.5 / Math.PI); copie
+			// .translate([width / 2, height / 1.5]) copie
+			// .scale((width -1) / 1.5 / Math.PI); 
 
 		var zoom = d3.zoom()
 			.scaleExtent([1, 8])
@@ -93,11 +93,19 @@
 
 		svg.call(zoom);
 
-		d3.queue()
+		d3.queue() //loading maps data
 			.defer(d3.json, 'world50m.json')
 			.defer(d3.tsv, '50m_original.tsv')
-			.await(function (error, world, data) {
+			.defer(d3.json, 'landings_reduced.json')
+
+			.await(function (error, world, data, meteor) {
 				if (error) throw error;
+				
+
+			meteor.forEach(function(d) {
+				console.log(d);
+			});
+
 
 				g.append("g")
 					.selectAll("path")
@@ -117,19 +125,61 @@
 					}))
 					.attr("class", "boundary")
 					.attr("d", path);
-//
-//				g.append('circle')
-//					.datum([13.40, 52.52]) // [longitude, latitude]
-//					.attr('cx', function (d) {
-//						// long
-//						return projection([d[0], d[1]])[0];
-//					})
-//					.attr('cy', function (d) {
-//						// lat
-//						return projection([d[0], d[1]])[1];
-//					})
-//					.attr('r', 4)
-//					.style('fill', '#ff00ff');
+
+//				FHP Position
+
+				g.append('circle')
+					.datum([13.0504799, 52.4137704]) // [longitude, latitude]
+					.attr('cx', function (d) {
+						// long
+						return projection([d[0], d[1]])[0];
+					})
+					.attr('cy', function (d) {
+						// lat
+						return projection([d[0], d[1]])[1];
+					})
+					.attr('r', 4)
+					.style('fill', 'gold');
+
+//				Berlin Position
+				g.append('circle')
+					.datum([13.40, 52.52]) // [longitude, latitude]
+					.attr('cx', function (d) {
+						// long
+						return projection([d[0], d[1]])[0];
+					})
+					.attr('cy', function (d) {
+						// lat
+						return projection([d[0], d[1]])[1];
+					})
+					.attr('r', 4)
+					.style('fill', '#ff00ff');
+
+//				Paris Position
+				g.append('circle')
+					.datum([2.35, 48.85])
+					.attr('cx', function (d) {
+						return projection([d[0], d[1]])[0];
+					})
+					.attr('cy', function (d) {
+						return projection([d[0], d[1]])[1];
+					})
+					.attr('r', 4)
+					.style('fill', '#ff00ff');
+
+//				London Position
+				g.append('circle')
+					.datum([-0.127673, 51.507457])
+					.attr('cx', function (d) {
+						return projection([d[0], d[1]])[0];
+					})
+					.attr('cy', function (d) {
+						return projection([d[0], d[1]])[1];
+					})
+					.attr('r', 4)
+					.style('fill', '#ff00ff');
+
+
 
 
 				data.forEach(function (d) {
@@ -143,7 +193,7 @@
 
 			});
 
-		function zoomed() {
+		function zoomed() { //alle kreise schrumpfen beim zoomen.
 			g.selectAll('circle')
 				.attr('r', function () {
 					return 4 / d3.event.transform.k;

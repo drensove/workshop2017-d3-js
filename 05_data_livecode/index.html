@@ -1,3 +1,4 @@
+<!-- Code made by Jens – 2017 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,13 +13,18 @@
 	<script src="../library/d3-scale-chromatic.v1.min.js"></script>
 
 	<style type="text/css">
-		.dot{
-			stroke: none;
-			fill:steelblue;
+		#tooltip {
+			position: absolute;
+			visibility: hidden;
+			background: white;
+			font-family:"Arial";
+			font-size: 12px;
+			padding: 5px 15px;
 		}
-		.dot2{
-			stroke: none;
-			fill:black;
+
+		.grid {
+		    stroke: lightgrey;
+		    opacity: 0.2;
 		}
 	</style>
 </head>
@@ -30,28 +36,30 @@
 </nav>
 <div id="tooltip"></div>
 
+
 <script type="text/javascript">
 
-window.onload = function () {
-
-		var margin = {top: 40, left: 300, bottom: 40, right: 100};
-		var width = window.innerWidth * 0.9 - margin.left - margin.right;
-		var height = window.innerHeight * 2 - margin.top - margin.bottom;
+	window.onload = function () {
+		var margin = {top: 40, left: 300, bottom: 60, right: 100};
+		var width = window.innerWidth * 1 - margin.left - margin.right;
+		var height = window.innerHeight * 4 - margin.top - margin.bottom;
 		
-		var svg = d3.select('body').append('svg')
+		var svg = d3.select('body')
+			.append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+ 		// var deadPeople = d3.selectAll()
  		var tooltip = d3.select('#tooltip');
 
 
- 		d3.csv('journalists_kills_mod5.csv', function(error, data) {
+ 	d3.csv('journalists_kills_mod5.csv', function(error, data) {
  			if (error) console.log(error);
 		  	  			console.log(data);
 
-		  	data.forEach(function(d) {
+		data.forEach(function(d) {
  			return{
  			Job : d.Job,
 			Type : d.Type,
@@ -62,12 +70,7 @@ window.onload = function () {
  		 	Name : d.Name
  		 	};
  			
- 			});
-
- 			
-
-
-	
+ 		});
 
 // y-Achse
  		var helper = {};
@@ -81,63 +84,90 @@ window.onload = function () {
    		}
 			helper[d.Country_killed] = helper[d.Country_killed] + 1;
 		});
-		// countries.sort(); 
+		
 
 		for(var key in helper){
 			if(helper.hasOwnProperty(key)){
-				countries.push([key, helper[key]])
+				countries.push([key, helper[key]]);
 			}
 		}
+
+		// countries.sort(); 
 
 
 		console.log(helper);
 		console.log(countries);
-
-
-		var y = d3.scaleBand()
-			.range([0, height])
-			.padding(2)
-			.domain(countries.map(function(d){
-				return d[0];
-			}));
 
 			// x-Achse
 	var x = d3.scaleLinear()
 			.range([0, width])
 			.domain([0, d3.max(countries, function (d) {
 			return d[1];
-			})]);		
+			})]);
+
+			// y-Achse
+	var y = d3.scaleBand()
+			.range([0, height])
+			.padding(1)
+			.domain(countries.map(function(d){
+				return d[0];
+			}));
 
 
 //--draw axis--//
-		svg.append('g')
-			.attr('class', 'axis axis--people')
-			.attr('transform', 'translate(0,' + height +')')
-			.call(d3.axisBottom(x));
 
-		svg.append('g')
-			.attr('class', 'axis axis--coutries')
-			.call(d3.axisLeft(y));	
+		//Working code example
+		// svg.append('g')
+		// 	.attr("class", "x axis axis--people")
+		// 	.attr('transform', 'translate(0,' + height + ')')
+		// 	.call(d3.axisBottom(x));
+			
+		// svg.append('g')
+		// 	.attr('class', 'axis axis--coutries')
+		// 	.call(d3.axisLeft(y));
 
-		 svg.selectAll('.dots')
+
+		//x-axis
+		svg.append('g')
+			.call(d3.axisBottom(x))
+			.attr('class', 'x axis axis--people')
+			.attr('transform', 'translate(0,' + height + ')');
+			
+
+		//y-axis
+		svg.append('g')
+			.call(d3.axisLeft(y))
+			.attr('class', 'y axis axis--coutries')
+			.selectAll("text")
+				.style("text-anchor", "end")
+				.attr("transform", function(d) {
+             return "translate(" + this.getBBox().height*-0.4 + "," + this.getBBox().height*-0 + ")";
+         	});
+
+
+		//draw dots
+		 svg.selectAll('.dot-kill')
 		 	.data(countries)
+		 	//.data(countries) copie
 		 	.enter().append('circle')
-		 	.attr('class', 'dots')
+		 	.attr('class', 'dot-kill')
+		 	
 			.attr('cx', function (d) {
 				return x(d[1]);
 			})
 			.attr('cy', function (d) {
 				return y(d[0]);
 			})
-			.attr('r', 2);
-			// .attr('width', x.bandwidth());
+			.attr('r', 5)
+			.style('fill', 'red')
+			.style('fill-opacity', 0.5);
 
 
 //--labelling--//
 		// x-Achse
 		svg.append("text")
       		.attr("x", width/2)
-      		.attr("y", height+25)
+      		.attr("y", height+40)
       		.style("text-anchor", "middle")
       		.text("Kills")
       		.style("font-size", 16);

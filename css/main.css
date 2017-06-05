@@ -20,6 +20,12 @@
 	stroke-width: 2px;
 }
 
+.dot-kill{
+	fill: red;
+	stroke: none;
+	stroke-width: 2px;
+}
+
 .line{
 	fill:none;
 	stroke: yellowgreen;
