@@ -93,13 +93,20 @@
 			}
 		}
 
-		// var deadPeople = d3.push(helper);
+// max number from killed journalists
+		var deadPeople = d3.max(countries, function (d) 
+			{
+			return d[1];
+			//return countries[0]; copie
+			});
 
 		// countries.sort(); 
 
 
 		console.log(helper);
 		console.log(countries);
+		console.log(deadPeople);
+
 
 			// x-Achse
 	var x = d3.scaleLinear()
@@ -160,7 +167,6 @@
 		//draw dots
 		 svg.selectAll('.dot-kill')
 		 	.data(countries)
-		 	//.data(countries) copie
 		 	.enter().append('circle')
 		 	.attr('class', 'dot-kill')
 		 	
@@ -184,7 +190,7 @@
 				.attr('r', 7);
 
 				tooltip
-		       		.html("killed: " + d.helper + "<br>" + "number: " + d.helper + "<br>")
+		       		.html("killed: " + deadPeople + "<br>" + "number: " + deadPeople + "<br>")
 		       		.style("visibility", "visible")
 		            .style("left", (d3.event.pageX + 5) + "px")
 		            .style("top", (d3.event.pageY - 28) + "px");
