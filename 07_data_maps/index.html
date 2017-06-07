@@ -61,16 +61,27 @@
 	window.onload = function () {
 
 		var width = 1060,
-			height = 600;
-
+			height = 800;
+		
 		var color = d3.scaleOrdinal(d3.schemeCategory10);
+		var color2 = d3.scaleOrdinal(d3.schemeCategory20);
+		var color3 = d3.scaleOrdinal(d3.schemePastel1);
+
+		var yellow = d3.interpolateYlGn(0); // "rgb(255, 255, 229)"
+
+    		
+					
+					
+
 
 		var projection = d3.geoMercator()
-			.translate([width / 3.2, height / 0.65])
-			.scale((width -1) / 1.6 );
-			//show europ
-			// .translate([width / 2, height / 1.5]) copie
-			// .scale((width -1) / 1.5 / Math.PI); 
+			//.translate([width / 3.2, height / 0.65])
+			//.scale((width -1) / 1.6 );
+			//showes europ
+			
+			 .translate([width / 2, height / 1.5]) 
+			 .scale((width -1) / 2.2 / Math.PI);
+			//showes global
 
 		var zoom = d3.zoom()
 			.scaleExtent([1, 8])
@@ -91,6 +102,9 @@
 
 		var g = svg.append("g");
 
+		var data;
+		var meteor;
+
 		svg.call(zoom);
 
 		d3.queue() //loading maps data
@@ -100,34 +114,82 @@
 
 			.await(function (error, world, data, meteor) {
 				if (error) throw error;
-				
 
 			meteor.forEach(function(d) {
+					d.GeoLocation= d.GeoLocation;
+					d.fall= d.fall;
+					d.id = +d.id;
+					d.mass = +d.mass;
+					d.name = d.name;
+					d.nametype = d.nametype;
+					d.recclass = d.recclass;
+					d.reclat = +d.reclat;
+					d.reclong = +d.reclong;
+					d.year = +d.year;
+			});
+
+			console.log(meteor);
+
+
+		g.append("g")
+			.selectAll("path")
+			.data(topojson.feature(world, world.objects.countries).features) //what is this?
+			.enter().append("path")
+			.attr("class", function (d) {
+				return 'l_' + d.id + ' land';
+				})
+			.attr("d", path)
+			.on('click', function (d) {
 				console.log(d);
 			});
 
+		g.append("path")
+			.datum(topojson.mesh(world, world.objects.countries, function (a, b) {
+				return a !== b;
+				}))
+			.attr("class", "boundary")
+			.attr("d", path);
 
-				g.append("g")
-					.selectAll("path")
-					.data(topojson.feature(world, world.objects.countries).features)
-					.enter().append("path")
-					.attr("class", function (d) {
-						return 'l_' + d.id + ' land';
-					})
-					.attr("d", path)
-					.on('click', function (d) {
-						console.log(d);
-					});
+		//draw the skystones
+		
+			g.selectAll("skystone")
+			.data(meteor)
+			.enter().append('circle')
+			.attr('cx', function (d){
+				return projection([d.reclong, d.reclat])[0]; //select the index=0 for x-axis.
+			})
+			.attr('cy', function (d){
+				return projection([d.reclong, d.reclat])[1]; //select the index=1 for y-axis.
+			})
+			.attr("class", "skystone")
+			.attr('r', 3)
 
-				g.append("path")
-					.datum(topojson.mesh(world, world.objects.countries, function (a, b) {
-						return a !== b;
-					}))
-					.attr("class", "boundary")
-					.attr("d", path);
+			.style('fill', function (d){
+				return color(d.year);
+			})
 
-//				FHP Position
+			//Zeige nur nach JAhren die Farben an. noch rausfinden wie das mit groessiger und gleich als zu schreiben ist.
 
+			.style("fill", function(d) { 
+				if (d.year <= 0) {
+					return 'gray';
+
+				 } else if (d.year <= 500) {
+				 	return 'blue';
+
+				// } else if (d.year >= 2000) {
+				// 	return color(d.year);
+
+				} else {
+					return "none";
+				}
+			});
+
+			
+
+
+
+//			FHP Position
 				g.append('circle')
 					.datum([13.0504799, 52.4137704]) // [longitude, latitude]
 					.attr('cx', function (d) {
@@ -139,9 +201,11 @@
 						return projection([d[0], d[1]])[1];
 					})
 					.attr('r', 4)
-					.style('fill', 'gold');
+					.style('stroke-width', '2')
+					.style('stroke', 'black')
+					.style('fill', 'none');
 
-//				Berlin Position
+//			Berlin Position
 				g.append('circle')
 					.datum([13.40, 52.52]) // [longitude, latitude]
 					.attr('cx', function (d) {
@@ -153,9 +217,11 @@
 						return projection([d[0], d[1]])[1];
 					})
 					.attr('r', 4)
-					.style('fill', '#ff00ff');
+					.style('stroke-width', '2')
+					.style('stroke', 'black')
+					.style('fill', 'none');
 
-//				Paris Position
+//			Paris Position
 				g.append('circle')
 					.datum([2.35, 48.85])
 					.attr('cx', function (d) {
@@ -165,9 +231,11 @@
 						return projection([d[0], d[1]])[1];
 					})
 					.attr('r', 4)
-					.style('fill', '#ff00ff');
+					.style('stroke-width', '2')
+					.style('stroke', 'black')
+					.style('fill', 'none');
 
-//				London Position
+//			London Position
 				g.append('circle')
 					.datum([-0.127673, 51.507457])
 					.attr('cx', function (d) {
@@ -177,16 +245,18 @@
 						return projection([d[0], d[1]])[1];
 					})
 					.attr('r', 4)
-					.style('fill', '#ff00ff');
+					.style('stroke-width', '2')
+					.style('stroke', 'black')
+					.style('fill', 'none');
 
 
 
 
 				data.forEach(function (d) {
-					if (d.iso_n3 != '-99') {
+					if (d.iso_n3 !== '-99') {
 						svg.selectAll('.l_' + d.iso_n3)
 							.style('fill', function () {
-								return color(d.continent);
+								return color3(d.continent);
 							});
 					}
 				});
