@@ -57,6 +57,8 @@
 
 </nav>
 
+<div id="tooltip"></div>
+
 <script>
 	window.onload = function () {
 
@@ -67,20 +69,15 @@
 		var color2 = d3.scaleOrdinal(d3.schemeCategory20);
 		var color3 = d3.scaleOrdinal(d3.schemePastel1);
 
-		var yellow = d3.interpolateYlGn(0); // "rgb(255, 255, 229)"
-
-    		
-					
-					
-
+	
 
 		var projection = d3.geoMercator()
-			//.translate([width / 3.2, height / 0.65])
-			//.scale((width -1) / 1.6 );
+			.translate([width / 3.2, height / 0.65])
+			.scale((width -1) / 1.6 );
 			//showes europ
 			
-			 .translate([width / 2, height / 1.5]) 
-			 .scale((width -1) / 2.2 / Math.PI);
+			 // .translate([width / 2, height / 1.5]) 
+			 // .scale((width -1) / 2.2 / Math.PI);
 			//showes global
 
 		var zoom = d3.zoom()
@@ -107,7 +104,11 @@
 
 		svg.call(zoom);
 
-		d3.queue() //loading maps data
+		var tooltip = d3.select('#tooltip');
+
+		//loading maps data		
+
+		d3.queue() 
 			.defer(d3.json, 'world50m.json')
 			.defer(d3.tsv, '50m_original.tsv')
 			.defer(d3.json, 'landings_reduced.json')
@@ -152,7 +153,7 @@
 
 		//draw the skystones
 		
-			g.selectAll("skystone")
+			g.selectAll(".skystone")
 			.data(meteor)
 			.enter().append('circle')
 			.attr('cx', function (d){
@@ -163,19 +164,72 @@
 			})
 			.attr("class", "skystone")
 			.attr('r', 3)
-
 			.style('fill', function (d){
 				return color(d.year);
 			})
 
-			//Zeige nur nach JAhren die Farben an. noch rausfinden wie das mit groessiger und gleich als zu schreiben ist.
+			// mouse on effect
+			.on('mouseover', function (d) 
+			{
+				svg.selectAll('.skystone')
+				.style('fill-opacity', 0.2);
+			
+				d3.select(this)
+				.style('fill-opacity', 1)
+				.attr('r', 8);
 
-			.style("fill", function(d) { 
+				tooltip
+		       		.html("year: " + d.year + "<br>" + "name: " + d.name + "<br>" )
+		       		.style("visibility", "visible")
+		            .style("left", (d3.event.pageX + 5) + "px")
+		            .style("top", (d3.event.pageY - 28) + "px");
+
+		            console.log(d.year);
+		            console.log(d.name);
+			})
+
+			
+			// mouse out effect
+			.on('mouseout', function (d) {
+				d3.select(this)
+				  .style("stroke-width", 0);
+		   tooltip.style("visibility", "hidden");
+
+		 	   svg.selectAll('.skystone')
+				  .style('fill-opacity', 0.5)
+				  .attr('r', 3);			
+			 })
+
+			//colors
+			.style("fill", function(d) {
 				if (d.year <= 0) {
-					return 'gray';
+					return 'blue';
 
 				 } else if (d.year <= 500) {
-				 	return 'blue';
+				 	return '#steelblue';
+
+				 } else if (d.year <= 1000) {
+				 	return '#8000ff';
+
+				 } else if (d.year <= 1500) {
+				 	return '#004e27';
+
+				 // } else if (d.year <= 1700) {
+				 // 	return '#3bc480';
+
+				 // } else if (d.year <= 1800) {
+				 // 	return '#00b35a';
+
+				 } else if (d.year <= 1900) {
+				 	return '#00ffc0';
+
+				 } else if (d.year <= 2000) {
+				 	return '#7fff00';
+
+				 } else if (d.year <= 2017) {
+				 	return 'yellow';
+
+				 
 
 				// } else if (d.year >= 2000) {
 				// 	return color(d.year);
@@ -186,6 +240,7 @@
 			});
 
 			
+			//missing Labeling Box and colors.
 
 
 
@@ -253,8 +308,9 @@
 
 
 				data.forEach(function (d) {
-					if (d.iso_n3 !== '-99') {
-						svg.selectAll('.l_' + d.iso_n3)
+					// if (d.iso_n3 !== '-99') { copie
+					if (d.iso_n3 ) {
+						svg.selectAll('.l_' + d.iso_n3 )
 							.style('fill', function () {
 								return color3(d.continent);
 							});
