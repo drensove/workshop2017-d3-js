@@ -78,18 +78,18 @@
 		var color2 = d3.scaleOrdinal(d3.schemeCategory20);
 		var color3 = d3.scaleOrdinal(d3.schemePastel1);
 		var color4 = 
-		[ 'none', '#2c7bb6', '#00a6ca', '#00ccbc', '#90eb9d', '#ffff8c', '#f9d057', '#f29e2e', '#e76818', '#d7191c'];
+		['none', '#2c7bb6', '#00a6ca', '#00ccbc', '#90eb9d', '#ffff8c', '#f9d057', '#f29e2e', '#e76818', '#d7191c'];
 
-		var stoneSize = 2;
+		var stoneSize = 3;
 
 		var projection = d3.geoMercator()
 			//showes europ
-			// .translate([width / 3.2, height / 0.65])
-			// .scale((width -1) / 1.6 );
+			.translate([width / 3.2, height / 0.65])
+			.scale((width -1) / 1.6 );
 			
 			//showes global
-			 .translate([width / 2, height / 1.8]) 
-			 .scale((width -1) / 2.0 / Math.PI);
+			 // .translate([width / 2, height / 1.8]) 
+			 // .scale((width -1) / 2.0 / Math.PI);
 			
 
 		var zoom = d3.zoom()
@@ -308,7 +308,7 @@
 				data.forEach(function (d) 
 				{
 				 svg.selectAll('.l_' + d.iso_n3 )
-					.style('fill', '#bbbbbb');
+					.style('fill', '#dddddd');
 				});
 
 			// color all countries colorful
