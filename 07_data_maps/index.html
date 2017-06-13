@@ -12,7 +12,7 @@
 	<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
-	<script src="//d3js.org/topojson.v1.min.js"></script>
+	<script type="text/javascript" src="../libraries/topojson.v1.min.js"></script>
 
 	<style>
 
@@ -39,6 +39,15 @@
 		.overlay {
 			fill: none;
 			pointer-events: all;
+		}
+
+		#tooltip {
+			position: absolute;
+			visibility: hidden;
+			background: white;
+			font-family:"Arial";
+			font-size: 12px;
+			padding: 5px 15px;
 		}
 
 	</style>
