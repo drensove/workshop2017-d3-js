@@ -313,18 +313,23 @@
 					.style('stroke', 'black')
 					.style('fill', 'none');
 
-
-
-
-				data.forEach(function (d) {
-					// if (d.iso_n3 !== '-99') { copie
-					if (d.iso_n3 ) {
-						svg.selectAll('.l_' + d.iso_n3 )
-							.style('fill', function () {
-								return color3(d.continent);
-							});
-					}
+			// color all countries grey
+				data.forEach(function (d) 
+				{
+				 svg.selectAll('.l_' + d.iso_n3 )
+					.style('fill', '#dddddd');
 				});
+
+			// color all countries colorful
+				// data.forEach(function (d) {
+				// 	// if (d.iso_n3 !== '-99') { copie
+				// 	if (d.iso_n3 ) {
+				// 		svg.selectAll('.l_' + d.iso_n3 )
+				// 			.style('fill', function () {
+				// 				return color3(d.continent);
+				// 			});
+				// 	}
+				// });
 
 			});
 
