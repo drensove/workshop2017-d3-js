@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Multilevel Data view</title>
+
+	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
+	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
+	<script src="../library/d3.min.js"></script>
+	<script src="http://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+
+	<style>
+
+		body {
+			background: #f5f5f5;
+		}
+
+		svg {
+			background: #fff;
+		}
+
+		#tooltip {
+			position: absolute;
+			visibility: hidden;
+			background: white;
+			font-family:"Arial";
+			font-size: 12px;
+			padding: 5px 15px;
+		}
+
+	</style>
+
+</head>
+<body>
+<nav class="nav">
+	<h3>Multilevel Data view</h3>
+	<!-- <a href="page03.html">Page 01</a>
+ -->	<a href="index.html" class="LinkActiv">home</a>
+
+</nav>
+
+<div id="tooltip"></div>
+<div class="container">
+	<div>
+		<div>Index</div>
+		<div class="type-container" id="planet-viz1"></div>
+	</div>
+
+	<div>
+		<div class="headline-container">
+			<div>Index -</div>
+			<div id="selection">all types visible</div>
+			<div id="remove-selection">remove</div>
+		</div>
+		<div class="planet-container" id="planet-viz2"></div>
+	</div>
+</div>
+
+
+<script>
+	window.onload = function () {
+
+		
+	};
+</script>
+
+</body>
+</html>

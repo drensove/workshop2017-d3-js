@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Map of Meteorite landings</title>
+	<title>Multilevel Data view</title>
 
 	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
 	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
@@ -56,13 +56,8 @@
 <body>
 <nav class="nav">
 	<h3>Map of Meteorite landings</h3>
-	<a href="page03.html">Page 01</a>
-	<!-- <a href="page02.html">Page 02</a> -->
-	<!-- <a href="page03.html">Page 03</a>
-	<a href="page04.html">Page 04</a>
-	<a href="page05.html">Page 05</a>
-	<a href="page06.html">Page 06</a> -->
-	<a href="index.html" class="LinkActiv">home</a>
+	<a href="page03.html" class="LinkActiv">Page 01</a>
+	<a href="index.html" >home</a>
 
 </nav>
 
@@ -86,10 +81,6 @@
 			//showes europ
 			.translate([width / 3.2, height / 0.65])
 			.scale((width -1) / 1.6 );
-			
-			//showes global
-			 // .translate([width / 2, height / 1.8]) 
-			 // .scale((width -1) / 2.0 / Math.PI);
 			
 
 		var zoom = d3.zoom()
@@ -240,8 +231,6 @@
 				}
 			});
 			
-			//missing Labeling Box and colors.
-
 
 
 //			FHP Position
@@ -310,17 +299,6 @@
 				 svg.selectAll('.l_' + d.iso_n3 )
 					.style('fill', '#dddddd');
 				});
-
-			// color all countries colorful
-				// data.forEach(function (d) {
-				// 	// if (d.iso_n3 !== '-99') { copie
-				// 	if (d.iso_n3 ) {
-				// 		svg.selectAll('.l_' + d.iso_n3 )
-				// 			.style('fill', function () {
-				// 				return color3(d.continent);
-				// 			});
-				// 	}
-				// });
 
 			});
 
