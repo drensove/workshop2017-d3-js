@@ -5,55 +5,38 @@
 	<title>Multilevel Data view</title>
 
 	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
-	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
-	<script src="../library/d3.min.js"></script>
-	<script src="http://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css" >
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<script type="text/javascript" src="../libraries/d3.min.js"></script>
+	<script type="text/javascript" src="../libraries/d3-scale-chromatic.min.js"></script>
 
 
 	<style>
-
-		body {
-			background: #f5f5f5;
-		}
-
-		svg {
-			background: #fff;
-		}
-
-		#tooltip {
-			position: absolute;
-			visibility: hidden;
-			background: white;
-			font-family:"Arial";
-			font-size: 12px;
-			padding: 5px 15px;
-		}
-
 	</style>
 
 </head>
 <body>
 <nav class="nav">
-	<h3>Multilevel Data view</h3>
-	<!-- <a href="page03.html">Page 01</a>
- -->	<a href="index.html" class="LinkActiv">home</a>
-
+	<h1>Multi ESI Planet view</h1>
+	<!-- <a href="page03.html">Page 01</a>-->	
+	<a href="index.html" class="LinkActiv">home</a>
 </nav>
 
 <div id="tooltip"></div>
 <div class="container">
 	<div>
-		<div>Index</div>
-		<div class="type-container" id="planet-viz1"></div>
+		<div>ESI Index - The next planet / Distanz (Ly)</div>
+		<div class="type-container" id="esi-viz1"></div>
 	</div>
 
 	<div>
-		<div class="headline-container">
-			<div>Index -</div>
+		<div class="container__headline">
+			<div>Classes from Planets</div>
 			<div id="selection">all types visible</div>
-			<div id="remove-selection">remove</div>
+			<div id="selection--remove">remove</div>
 		</div>
-		<div class="planet-container" id="planet-viz2"></div>
+
+		<div class="planet-container-viz2" id="esi-viz2"></div>
 	</div>
 </div>
 
@@ -61,8 +44,109 @@
 <script>
 	window.onload = function () {
 
-		
-	};
+		var esi_data;
+
+		var margin = {top: 20, left: 100, bottom: 60, right: 10};
+		var marginSp = {top: 20, left: 50, bottom: 50, right: 10};
+		var width = 650 * 0.9 - margin.left - margin.right;
+		var widthSp = 650 * 0.9 - marginSp.left - marginSp.right;
+		var height = 450 * 0.9 - margin.top - margin.bottom;
+
+		var tooltip = d3.select('#tooltip');
+		var selectionName = d3.select('#selection');
+
+		var removeSelection = d3.select('#remove-selection')
+			.on('click', function () {
+				selectionName.html('all types visible');
+				d3.select(this).style('visibility', 'hidden');
+				updatePlanetViz(esi_data);
+			});
+
+		var svgType = d3.select('#type-viz')
+			.append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom)
+			.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+		var x = d3.scaleLinear()
+			.range([0, width]);
+
+		var y = d3.scaleLinear()
+			.range([height, 0]);
+
+		var r = d3.scaleLinear()
+			.range([1, 10]);
+
+		var yAxis = d3.axisLeft(y),
+			xAxis = d3.axisBottom(x);
+
+		var svgESI = d3.select('#esi-viz')
+			.append('svg')
+			.attr('width', widthSp + marginSp.left + marginSp.right)
+			.attr('height', height + marginSp.top + marginSp.bottom);
+
+		var g = svgESI.append('g')
+			.attr('transform', 'translate(' + marginSp.left + ',' + marginSp.top + ')');
+
+		var gy = g.append('g')
+			.attr('class', 'y-axis')
+			.call(yAxis);
+
+		var gx = g.append('g')
+			.attr('class', 'x-axis')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(xAxis);
+
+
+		//Loading 01
+	d3.csv('esi.csv', function(error, esi_d) {
+ 		if (error) console.log(error);
+		  	  		console.log(esi_d);
+
+ 		esi_d.forEach(function(d) {
+
+ 		// var type1 = d[Type_1];
+		// var type2 = d[Type_2];
+
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.ptype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.flux = +d.flux;
+			d.teq = +d.teq;
+			d.period = +d.period;
+			d.distance = +d.distance;
+			d.status = d.status;
+ 		});
+
+
+
+//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+ //Loading 02
+
+ 		// d3.csv('esi.csv', function (d) {
+ 		// 		var type1 = d['Type 1'];
+			// 	var type2 = d['Type 2'];
+
+			// 	return {
+					
+			// 		name: d[name],
+			// 		esi: +d[esi],
+			// 		ptype: d[planettype],
+			// 		mass: +d[mass],
+			// 		radius: +d[radius],
+			// 		flux: +d[flux],
+			// 		teq: +d[teq],
+			// 		period: +d[period],
+			// 		lyear: +d[distance],
+			// 		status: d[status],
+			// 	};
+
+ 	});//--end from csv data
+};
 </script>
 
 </body>
