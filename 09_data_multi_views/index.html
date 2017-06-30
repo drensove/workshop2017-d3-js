@@ -10,10 +10,6 @@
 	<script type="text/javascript" src="../libraries/d3.min.js"></script>
 	<script type="text/javascript" src="../libraries/d3-scale-chromatic.min.js"></script>
 
-
-	<style>
-	</style>
-
 </head>
 <body>
 <nav class="nav">
@@ -25,8 +21,8 @@
 <div id="tooltip"></div>
 <div class="container">
 	<div>
-		<div>ESI Index - The next planet / Distanz (Ly)</div>
-		<div class="type-container" id="esi-viz1"></div>
+		<div>ESI Index - The next planet / Distance (Ly)</div>
+		<div class="sun-container" id="Lyear-viz"></div>
 	</div>
 
 	<div>
@@ -36,7 +32,7 @@
 			<div id="selection--remove">remove</div>
 		</div>
 
-		<div class="planet-container-viz2" id="esi-viz2"></div>
+		<div class="planet-container" id="esi-viz"></div>
 	</div>
 </div>
 
@@ -62,7 +58,8 @@
 				updatePlanetViz(esi_data);
 			});
 
-		var svgType = d3.select('#type-viz')
+// Planet Distance - Container 01
+		var svgLyear = d3.select('#Lyear-viz')
 			.append('svg')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
@@ -71,6 +68,7 @@
 
 		var x = d3.scaleLinear()
 			.range([0, width]);
+			
 
 		var y = d3.scaleLinear()
 			.range([height, 0]);
@@ -81,6 +79,8 @@
 		var yAxis = d3.axisLeft(y),
 			xAxis = d3.axisBottom(x);
 
+
+// Plante ESI – Container 02
 		var svgESI = d3.select('#esi-viz')
 			.append('svg')
 			.attr('width', widthSp + marginSp.left + marginSp.right)
@@ -98,16 +98,33 @@
 			.attr('transform', 'translate(0,' + height + ')')
 			.call(xAxis);
 
+			
+
+// // Container 02
+// 		var svgly = d3.select('#Lyear-viz')
+// 			.append('svg')
+// 			.attr('width', widthSp + marginSp.left + marginSp.right)
+// 			.attr('height', height + marginSp.top + marginSp.bottom);
+
+// 		var g2 = svgly.append('g')
+// 			.attr('transform', 'translate(' + marginSp.left + ',' + marginSp.top + ')');
+
+// 		var gy2 = g.append('g')
+// 			.attr('class', 'y-axis')
+// 			.call(yAxis);
+
+// 		var gx2 = g.append('g')
+// 			.attr('class', 'x-axis')
+// 			.attr('transform', 'translate(0,' + height + ')')
+// 			.call(xAxis);
+
 
 		//Loading 01
 	d3.csv('esi.csv', function(error, esi_d) {
  		if (error) console.log(error);
-		  	  		console.log(esi_d);
+		  	  	   console.log(esi_d);
 
  		esi_d.forEach(function(d) {
-
- 		// var type1 = d[Type_1];
-		// var type2 = d[Type_2];
 
  			d.name = d.name;
 			d.esi = +d.esi;
@@ -121,6 +138,22 @@
 			d.status = d.status;
  		});
 
+ 		var helper = {};
+ 		var planet = [], esi_viz = [], Lyear_viz = [];
+
+ 		// esi_d.forEach(function(error, da) {
+ 		// 	var esi_data = da;
+
+ 		// 		esi_data.forEach(function(d){
+ 		// 			helper[d.status].count = helper[d.status].count + 1;
+
+			// 	console.log(status);
+ 		// 		});
+ 		// });
+ 		
+ 		// var esi_viz; // ?
+ 		// var Lyear_viz; // ?
+ 		// var p_count;
 
 
 //::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
@@ -141,7 +174,7 @@
 			// 		flux: +d[flux],
 			// 		teq: +d[teq],
 			// 		period: +d[period],
-			// 		lyear: +d[distance],
+			// 		Lyear: +d[distance],
 			// 		status: d[status],
 			// 	};
 

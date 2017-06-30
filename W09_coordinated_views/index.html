@@ -125,8 +125,7 @@
 			.attr('transform', 'translate(0,' + height + ')')
 			.call(xAxis);
 
-		d3.csv('Pokemon.csv'
-			, function (d) {
+		d3.csv('Pokemon.csv', function (d) {
 				var type2 = d['Type 2'];
 
 				if (type2 === "") {
