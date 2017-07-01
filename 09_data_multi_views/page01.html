@@ -2,149 +2,205 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Maps</title>
+	<title>Multilevel Data view</title>
 
-	<script src="//d3js.org/d3.v4.min.js"></script>
-	<script src="https://d3js.org/d3-queue.v3.min.js"></script>
-	<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
-	<script src="//d3js.org/topojson.v1.min.js"></script>
-
-	<style>
-
-		body {
-			background: #f5f5f5;
-		}
-
-		svg {
-			background: #fff;
-		}
-
-		.land {
-			fill: #000;
-		}
-
-		.boundary {
-			fill: none;
-			stroke: #fff;
-			stroke-linejoin: round;
-			stroke-linecap: round;
-			vector-effect: non-scaling-stroke;
-		}
-
-		.overlay {
-			fill: none;
-			pointer-events: all;
-		}
-
-	</style>
+	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
+	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css" >
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<script type="text/javascript" src="../libraries/d3.min.js"></script>
+	<script type="text/javascript" src="../libraries/d3-scale-chromatic.min.js"></script>
 
 </head>
 <body>
 <nav class="nav">
-	<h3>World-maps</h3>
-	<a href="page01.html" class="LinkActiv">Page 01</a>
-	<!-- <a href="page02.html">Page 02</a>
-	<a href="page03.html">Page 03</a>
-	<a href="page04.html">Page 04</a>
-	<a href="page05.html">Page 05</a>
-	<a href="page06.html">Page 06</a> -->
-	<a href="index.html">home</a>
-
+	<h1>Multi ESI Planet view</h1>
+	<!-- <a href="page03.html">Page 01</a>-->	
+	<a href="index.html" >home</a>
+	<a href="page03.html" class="LinkActiv">Page 01</a>
 </nav>
+
+<div id="tooltip"></div>
+<div class="container">
+<!-- VIZ 01 -->
+	<div>
+		<div class="container__headline">
+			<div>All Planets: </div>
+			<div id="selection">all types visible</div>
+			<div id="selection--remove">remove</div>
+		</div>
+		<div class="planet-container" id="esi-viz"></div>
+	</div>
+<!-- VIZ 02 -->
+	<div>
+		<div>ESI Index - The next planet / Distance (Ly)</div>
+		<div class="sun-container" id="Lyear-viz"></div>
+	</div>
+
+</div>
+
 
 <script>
 	window.onload = function () {
 
-		var width = 1060,
-			height = 600;
+		var esi_mainData;
 
-		var color = d3.scaleOrdinal(d3.schemeCategory10);
+		var margin = {top: 20, left: 100, bottom: 60, right: 10};
+		var marginSp = {top: 20, left: 50, bottom: 50, right: 10};
+		var width = 650 * 0.9 - margin.left - margin.right;
+		var widthSp = 650 * 0.9 - marginSp.left - marginSp.right;
+		var height = 450 * 0.9 - margin.top - margin.bottom;
 
-		var projection = d3.geoMercator()
-			.translate([width / 2, height / 1.5])
-			.scale((width - 1) / 2 / Math.PI);
+		var colorPetal = d3.scaleThreshold()
+			// .range(d3.schemeBlues[9])
+			.range([ "#f69696", "#beab29", "#30b2cd"]) // color range
+			.domain([0.6,0.8]);
 
-		var zoom = d3.zoom()
-			.scaleExtent([1, 8])
-			.on("zoom", zoomed);
+		var tooltip = d3.select('#tooltip');
+		var selectionName = d3.select('#selection');
 
-		var path = d3.geoPath()
-			.projection(projection);
-
-		var svg = d3.select("body").append("svg")
-			.attr("width", width)
-			.attr("height", height)
-			.append("g");
-
-		svg.append("rect")
-			.attr("class", "overlay")
-			.attr("width", width)
-			.attr("height", height);
-
-		var g = svg.append("g");
-
-		svg.call(zoom);
-
-		d3.queue()
-			.defer(d3.json, 'world50m.json')
-			.defer(d3.tsv, '50m_original.tsv')
-			.await(function (error, world, data) {
-				if (error) throw error;
-
-				g.append("g")
-					.selectAll("path")
-					.data(topojson.feature(world, world.objects.countries).features)
-					.enter().append("path")
-					.attr("class", function (d) {
-						return 'l_' + d.id + ' land'
-					})
-					.attr("d", path)
-					.on('click', function (d) {
-						console.log(d);
-					});
-
-				g.append("path")
-					.datum(topojson.mesh(world, world.objects.countries, function (a, b) {
-						return a !== b;
-					}))
-					.attr("class", "boundary")
-					.attr("d", path);
-//
-//				g.append('circle')
-//					.datum([13.40, 52.52]) // [longitude, latitude]
-//					.attr('cx', function (d) {
-//						// long
-//						return projection([d[0], d[1]])[0];
-//					})
-//					.attr('cy', function (d) {
-//						// lat
-//						return projection([d[0], d[1]])[1];
-//					})
-//					.attr('r', 4)
-//					.style('fill', '#ff00ff');
-
-
-				data.forEach(function (d) {
-					if (d.iso_n3 != '-99') {
-						svg.selectAll('.l_' + d.iso_n3)
-							.style('fill', function () {
-								return color(d.continent);
-							})
-					}
-				})
-
+		var removeSelection = d3.select('#remove-selection')
+			.on('click', function () {
+				selectionName.html('all types visible');
+				d3.select(this).style('visibility', 'hidden');
+				updatePlanetViz(esi_mainData);
 			});
 
-		function zoomed() {
-			g.selectAll('circle')
-				.attr('r', function () {
-					return 4 / d3.event.transform.k;
-				});
-			g.attr("transform", d3.event.transform);
-		}
-	};
+//--------------- LightYear Distance - Container ---------------//
+		var svgLyear = d3.select('#Lyear-viz')
+			.append('svg')
+			.append('g')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom)
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		
+
+		var x = d3.scaleLinear()
+			.range([0, width]);
+			//domain?
+			
+		var y = d3.scaleLinear()
+			.range([height, 0]);
+			//domain?
+
+		var r = d3.scaleLinear()
+			.range([1, 10]);
+
+		var yAxis = d3.axisLeft(y),
+			xAxis = d3.axisBottom(x);
+
+//--------------- Plante ESI – Container ---------------//
+		var svgESI = d3.select('#esi-viz')
+			.append('svg')
+			.attr('width', widthSp + marginSp.left + marginSp.right)
+			.attr('height', height + marginSp.top + marginSp.bottom);
+
+		var g = svgESI.append('g')
+			.attr('transform', 'translate(' + marginSp.left + ',' + marginSp.top + ')');
+
+		var gy = g.append('g')
+			.attr('class', 'y-axis')
+			.call(yAxis);
+
+		var gx = g.append('g')
+			.attr('class', 'x-axis')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(xAxis);
+
+
+		//Loading 01
+	d3.csv('esi.csv', function(error, esi_d) {
+ 		if (error) console.log(error);
+		  	  	   console.log(esi_d);
+
+ 		esi_d.forEach(function(d) {
+
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.ptype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.flux = +d.flux;
+			d.teq = +d.teq;
+			d.period = +d.period;
+			d.distance = +d.distance;
+			d.status = d.status;
+ 		});
+
+ 		// var helper = {};
+ 		// var planet = [], esi_viz = [], Lyear_viz = [];
+
+ 		//scaling
+	var x = d3.scaleLinear()
+	 	  	.range([0, width])
+	 	  	.domain([0, d3.max(data, function(d) {return d.distance; })]); 
+	  //	.domain([0.55, d3.max(data, function (d) {return d.esi;})+0.01]); //example
+
+	var y = d3.scaleLinear()
+	 	  	.range([height, 0 ])
+	 	  	.domain([0.5, d3.max(data, function (d) {return d.esi;})]); 
+	 //	 	.domain(d3.extent(data, function (d) {return d.esi; }));
+
+ 		
+
+
+//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+// esi_d.forEach(function(error, da) {
+ 		// 	var esi_mainData = da;
+
+ 		// 		esi_mainData.forEach(function(d){
+ 		// 			helper[d.status].count = helper[d.status].count + 1;
+
+			// 	console.log(status);
+ 		// 		});
+ 		// });
+ 		
+ 		// var esi_viz; // ?
+ 		// var Lyear_viz; // ?
+ 		// var p_count;
+
+
+ //Loading 02
+
+ 		// d3.csv('esi.csv', function (d) {
+ 		// 		var type1 = d['Type 1'];
+			// 	var type2 = d['Type 2'];
+
+			// 	return {
+					
+			// 		name: d[name],
+			// 		esi: +d[esi],
+			// 		ptype: d[planettype],
+			// 		mass: +d[mass],
+			// 		radius: +d[radius],
+			// 		flux: +d[flux],
+			// 		teq: +d[teq],
+			// 		period: +d[period],
+			// 		Lyear: +d[distance],
+			// 		status: d[status],
+			// 	};
+
+
+	// // Container 02
+// 		var svgly = d3.select('#Lyear-viz')
+// 			.append('svg')
+// 			.attr('width', widthSp + marginSp.left + marginSp.right)
+// 			.attr('height', height + marginSp.top + marginSp.bottom);
+
+// 		var g2 = svgly.append('g')
+// 			.attr('transform', 'translate(' + marginSp.left + ',' + marginSp.top + ')');
+
+// 		var gy2 = g.append('g')
+// 			.attr('class', 'y-axis')
+// 			.call(yAxis);
+
+// 		var gx2 = g.append('g')
+// 			.attr('class', 'x-axis')
+// 			.attr('transform', 'translate(0,' + height + ')')
+// 			.call(xAxis);
+
+ 	});//--end from csv data
+};
 </script>
 
 </body>

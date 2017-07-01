@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Maps</title>
+	<title>Example</title>
 
 	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
 	<link href="../css/normalize.min.css" rel="stylesheet" type="text/css" >
@@ -16,43 +16,17 @@
 
 	<style>
 
-		body {
-			background: #f5f5f5;
-		}
-
-		svg {
-			background: #fff;
-		}
-
-		.land {
-			fill: #000;
-		}
-
-		.boundary {
-			fill: none;
-			stroke: #fff;
-			stroke-linejoin: round;
-			stroke-linecap: round;
-			vector-effect: non-scaling-stroke;
-		}
-
-		.overlay {
-			fill: none;
-			pointer-events: all;
-		}
+		
 
 	</style>
 
 </head>
 <body>
 <nav class="nav">
-	<h3>World-maps</h3>
+	<h3>Titel</h3>
 	<a href="page01.html">Page 01</a>
 	<a href="page02.html" class="LinkActiv">Page 02</a>
-	<!-- <a href="page03.html">Page 03</a>
-	<a href="page04.html">Page 04</a>
-	<a href="page05.html">Page 05</a>
-	<a href="page06.html">Page 06</a> -->
+	
 	<a href="index.html">home</a>
 
 </nav>
@@ -60,138 +34,7 @@
 <script>
 	window.onload = function () {
 
-		var width = 1060,
-			height = 600;
-
-		var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-		var projection = d3.geoMercator()
-			.translate([width / 3.2, height / 0.65])
-			.scale((width -1) / 1.6 );
-			//show europ
-			// .translate([width / 2, height / 1.5]) copie
-			// .scale((width -1) / 1.5 / Math.PI); 
-
-		var zoom = d3.zoom()
-			.scaleExtent([1, 8])
-			.on("zoom", zoomed);
-
-		var path = d3.geoPath()
-			.projection(projection);
-
-		var svg = d3.select("body").append("svg")
-			.attr("width", width)
-			.attr("height", height)
-			.append("g");
-
-		svg.append("rect")
-			.attr("class", "overlay")
-			.attr("width", width)
-			.attr("height", height);
-
-		var g = svg.append("g");
-
-		svg.call(zoom);
-
-		d3.queue() //loading maps data
-			.defer(d3.json, 'world50m.json')
-			.defer(d3.tsv, '50m_original.tsv')
-			.await(function (error, world, data) {
-				if (error) throw error;
-
-				g.append("g")
-					.selectAll("path")
-					.data(topojson.feature(world, world.objects.countries).features)
-					.enter().append("path")
-					.attr("class", function (d) {
-						return 'l_' + d.id + ' land';
-					})
-					.attr("d", path)
-					.on('click', function (d) {
-						console.log(d);
-					});
-
-				g.append("path")
-					.datum(topojson.mesh(world, world.objects.countries, function (a, b) {
-						return a !== b;
-					}))
-					.attr("class", "boundary")
-					.attr("d", path);
-
-//				FHP Position
-
-				g.append('circle')
-					.datum([13.0504799, 52.4137704]) // [longitude, latitude]
-					.attr('cx', function (d) {
-						// long
-						return projection([d[0], d[1]])[0];
-					})
-					.attr('cy', function (d) {
-						// lat
-						return projection([d[0], d[1]])[1];
-					})
-					.attr('r', 4)
-					.style('fill', 'gold');
-
-//				Berlin Position
-				g.append('circle')
-					.datum([13.40, 52.52]) // [longitude, latitude]
-					.attr('cx', function (d) {
-						// long
-						return projection([d[0], d[1]])[0];
-					})
-					.attr('cy', function (d) {
-						// lat
-						return projection([d[0], d[1]])[1];
-					})
-					.attr('r', 4)
-					.style('fill', '#ff00ff');
-
-//				Paris Position
-				g.append('circle')
-					.datum([2.35, 48.85])
-					.attr('cx', function (d) {
-						return projection([d[0], d[1]])[0];
-					})
-					.attr('cy', function (d) {
-						return projection([d[0], d[1]])[1];
-					})
-					.attr('r', 4)
-					.style('fill', '#ff00ff');
-
-//				London Position
-				g.append('circle')
-					.datum([-0.127673, 51.507457])
-					.attr('cx', function (d) {
-						return projection([d[0], d[1]])[0];
-					})
-					.attr('cy', function (d) {
-						return projection([d[0], d[1]])[1];
-					})
-					.attr('r', 4)
-					.style('fill', '#ff00ff');
-
-
-
-
-				data.forEach(function (d) {
-					if (d.iso_n3 != '-99') {
-						svg.selectAll('.l_' + d.iso_n3)
-							.style('fill', function () {
-								return color(d.continent);
-							});
-					}
-				});
-
-			});
-
-		function zoomed() { //alle kreise schrumpfen beim zoomen.
-			g.selectAll('circle')
-				.attr('r', function () {
-					return 4 / d3.event.transform.k;
-				});
-			g.attr("transform", d3.event.transform);
-		}
+		
 	};
 </script>
 
