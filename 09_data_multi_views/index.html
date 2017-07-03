@@ -24,17 +24,16 @@
 <!-- VIZ 01 -->
 	<div>
 		<div>ESI Index - The next planet / Distance (Ly)</div>
-		<div class="sun-container" id="Lyear-viz"></div>
+		<div class="stars-container" id="lyear-viz"></div>
 	</div>
-	
 <!-- VIZ 02 -->
 	<div>
 		<div class="container__headline">
-			<div>All Planets: </div>
+			<div>Earth Like Planets- </div>
 			<div id="selection">all types visible</div>
 			<div id="selection--remove">remove</div>
 		</div>
-		<div class="planet-container" id="esi-viz"></div>
+		<div class="planet-container" id="planet-viz"></div>
 	</div>
 
 </div>
@@ -46,19 +45,13 @@
 		var esi_mainData;
 
 		var margin = {top: 20, left: 100, bottom: 60, right: 10};
-		var marginSp = {top: 20, left: 50, bottom: 50, right: 10};
-
 		var width = 650 * 0.9 - margin.left - margin.right;
-		var widthSp = 650 * 0.9 - marginSp.left - marginSp.right;
-
 		var height = 650 * 0.9 - margin.top - margin.bottom;
-		var heightSb = 450 * 0.9 - margin.top - marginSp.bottom;
-
 
 		var colorPetal = d3.scaleThreshold()
 			// .range(d3.schemeBlues[9])
-			.range([ "#f69696", "#beab29", "#30b2cd"]) // color range
-			.domain([0.6,0.8]);
+			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
+			.domain([0.6,0.8,1.0]);
 
 		var tooltip = d3.select('#tooltip');
 		var selectionName = d3.select('#selection');
@@ -73,7 +66,7 @@
 
 
 //--------------- LightYear Distance - Container ---------------//
-var svgLyear = d3.select('#Lyear-viz')
+var svgLyear = d3.select('#lyear-viz')
 			.append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
@@ -83,7 +76,7 @@ var svgLyear = d3.select('#Lyear-viz')
 
 //--------------- Plante ESI – Container ---------------//
 
-var svgESI = d3.select('#esi-viz')
+var svgESI = d3.select('#planet-viz')
 			.append('svg')
 			.attr('height', height + margin.top + margin.bottom)
  			.attr('width', width + margin.left + margin.right)
@@ -128,12 +121,6 @@ var svgESI = d3.select('#esi-viz')
  		}); //end from -for Each.
 
 
-
-
-
- 		
-
- 		
 
 //scaling
 	var y = d3.scaleLinear()
@@ -191,20 +178,24 @@ var svgESI = d3.select('#esi-viz')
 				return y (d.distance);
 			})
 
-			.style('fill', 'none')
-			.style('stroke-width', '2')
-			.style('stroke', function (d){
+			.style('fill', function(d){
 				return colorPetal(d.esi);
 			})
+			 .style('stroke-width', '2')
+			 .style('stroke', function (d){
+			 	return colorPetal(d.esi);
+			 })
+
+			
 
 	//select earth
 			.style("fill", function(d) { 
 				if (d.status === "confirmed") {
-					return "none"; 
+					return colorPetal(d.esi); 
 				} else if (d.status === "no Exoplanet"){
 					return colorPetal(d.esi);
 				} else {
-					return "none";
+					return colorPetal(d.esi);
 				}
 			});
 
@@ -262,7 +253,7 @@ var svgESI = d3.select('#esi-viz')
 
 
 	// // Container 02
-// 		var svgly = d3.select('#Lyear-viz')
+// 		var svgly = d3.select('#lyear-viz')
 // 			.append('svg')
 // 			.attr('width', widthSp + marginSp.left + marginSp.right)
 // 			.attr('height', height + marginSp.top + marginSp.bottom);
