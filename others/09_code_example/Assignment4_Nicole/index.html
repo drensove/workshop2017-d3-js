@@ -196,9 +196,7 @@
 		function drawMap(welt, data1, data2, svg) {
 		
 		var color = d3.scaleSequential(d3.interpolateGreens);
-		var jahr = d3.scaleLinear()
-					.range([0, 1])
-					.domain([1900, 2015])
+		var jahr = d3.scaleLinear().range([0, 1]).domain([1900, 2015])
 
 		var projection = d3.geoMercator()
 			.translate([width / 2.5, height / 1.3 ])

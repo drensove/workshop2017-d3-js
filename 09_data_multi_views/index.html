@@ -17,6 +17,7 @@
 	<!-- <a href="page03.html">Page 01</a>-->	
 	<a href="index.html" class="LinkActiv">home</a>
 	<a href="page01.html">Page 01</a>
+	<a href="page02.html">Page 02</a>
 </nav>
 
 <div id="tooltip"></div>
@@ -44,14 +45,13 @@
 
 		var esi_mainData;
 
+		var colorPetal = d3.scaleThreshold()
+			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
+			.domain([0.6,0.8,1.0]);
+
 		var margin = {top: 20, left: 100, bottom: 60, right: 10};
 		var width = 650 * 0.9 - margin.left - margin.right;
 		var height = 650 * 0.9 - margin.top - margin.bottom;
-
-		var colorPetal = d3.scaleThreshold()
-			// .range(d3.schemeBlues[9])
-			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
-			.domain([0.6,0.8,1.0]);
 
 		var tooltip = d3.select('#tooltip');
 		var selectionName = d3.select('#selection');
@@ -63,28 +63,63 @@
 				updatePlanetViz(esi_mainData);
 			});
 
-
-
-//--------------- LightYear Distance - Container ---------------//
-var svgLyear = d3.select('#lyear-viz')
+		var svgESI = d3.select('#ESI-viz')
 			.append('svg')
+			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
- 			.attr('width', width + margin.left + margin.right)
- 			.append('g')
- 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+			.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+		var x = d3.scaleLinear()
+			.range([0, width]);
+		
+		var y = d3.scaleLinear()
+			.range([height, 0]);
+		
+		var r = d3.scaleLinear()
+			.range([1, 10]);
+		
+		var yAxis = d3.axisLeft(y),
+			xAxis = d3.axisBottom(x);
 
-//--------------- Plante ESI – Container ---------------//
-
-var svgESI = d3.select('#planet-viz')
+		var svgBar = d3.select('#bar-viz')
 			.append('svg')
-			.attr('height', height + margin.top + margin.bottom)
- 			.attr('width', width + margin.left + margin.right)
- 			.append('g')
- 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom);
 
+		svgBar.append("text")
+			.attr("x", 65)
+			.attr("y", 48)
+			.style("font-family", "Roboto")
+			.style("font-size", 14)
+			.style("text-anchor", "start")
+			.text("Data1");
 
-//--------------- Loading ---------------//
+		svgBar.append("text")
+			.attr("x", 610)
+			.attr("y", 430)
+			.style("font-family", "Roboto")
+			.style("font-size", 14)
+			.style("text-anchor", "start")
+			.text("Data2");
+
+		var g = svgBar.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		
+		var gy = g.append('g')
+			.attr('class', 'y-axis')
+			.call((yAxis)
+				.tickFormat(d3.format("d")) //?
+			);
+			
+		var gx = g.append('g')
+			.attr('class', 'x-axis')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call((xAxis)
+				.tickFormat(d3.format("d")) //?
+			);
+
+		//--------------- Loading ---------------//
 	d3.csv('esi.csv', function(error, esi_d) {
  		if (error) console.log(error);
 		  	  	   console.log(esi_d);
@@ -120,109 +155,165 @@ var svgESI = d3.select('#planet-viz')
 
  		}); //end from -for Each.
 
-
-
-//scaling
-	var y = d3.scaleLinear()
-	 	  	.range([height, 0])
-	 	  	.domain([0, d3.max(esi_d, function (d) {
-	 	  		return d.distance;
-	 	  	})]);
-
-	var x = d3.scaleLinear()
-	 	  	.range([0, width])
-	 	  	.domain([0.5, d3.max(esi_d, function(d) {
-	 	  		return d.esi;
-	 	  	})]);
-
 		
-	//draw axis
-		svgLyear.append('g')
-	 	   .call(d3.axisLeft(y));
 
-	 	svgLyear.append('g')
-	 		.attr('transform', 'translate(0,' + height +')')
-	 	 	.call(d3.axisBottom(x));
-
-	//labelling
-		svgLyear.append("text")             
-      		.attr("x", width/2)
-      		.attr("y", height+50)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("ESI = earth like");
-      		
-
-        svgLyear.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("Distance: Light-Years (ly)");
-      		
-
-	//--planets--//
-	 	svgLyear.selectAll('.planet')
-			.data(esi_d)
-			.enter().append('circle')
-			.attr('class', 'planet')
-			.attr('r', function(d){
-				return (d.radius*2);
-			}) //making planets bigger
-
-			.attr('cx', function(d){
-				return x(d.esi);
-			})
-			.attr('cy', function(d){
-				return y (d.distance);
-			})
-
-			.style('fill', function(d){
-				return colorPetal(d.esi);
-			})
-			 .style('stroke-width', '2')
-			 .style('stroke', function (d){
-			 	return colorPetal(d.esi);
-			 })
+		function drawMap(star, data1, data2, svg) {
 
 			
 
-	//select earth
-			.style("fill", function(d) { 
-				if (d.status === "confirmed") {
-					return colorPetal(d.esi); 
-				} else if (d.status === "no Exoplanet"){
-					return colorPetal(d.esi);
-				} else {
-					return colorPetal(d.esi);
-				}
-			});
+			var zoom = d3.zoom()
+			.scaleExtent([1, 18])
+			.translateExtent([[0,0],[width,height]])
+			.on("zoom", zoomed);
 
-	// Legend //				
-		var legend = svgLyear.append('g')
-			.attr('transform', 'translate(' + (width-50) + ',0)')
+			var svg = svg.append("g");
 
-			.attr('class', 'legend')
-			.selectAll('.info')
-			.data(colorPetal.domain())
-			.enter().append('g')
-			.attr('class', 'info')
-			.attr('transform', function (d, i) {
-				return 'translate(10,' + (i * 20) + ')';
-			});
-		legend.append('rect')
-			.attr('width', 10)
-			.attr('height', 10)
-			.style('fill', function (d) {
-				return colorPetal(d);
-			});
-		legend.append('text')
-			.attr("x", 24)
-			.attr("y", 10)
-			.text(function (d) {
-				return d;
-			});
+			svg.select("#ESI-viz")
+			.append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g");
+
+			svg.append("rect")
+			.attr("class", "overlay")
+			.attr("width", width)
+			.attr("height", height);
+
+			svg.append("g")
+			.attr("id", function(d){
+				return d.name;
+			})
+			console.log(d.name)
+			.selectAll("stars")
+			.on("click", clicked);
+
+		}
+
+
+// //--------------- LightYear Distance - Container ---------------//
+// var svgLyear = d3.select('#lyear-viz')
+// 			.append('svg')
+// 			.attr('height', height + margin.top + margin.bottom)
+//  			.attr('width', width + margin.left + margin.right)
+//  			.append('g')
+//  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+// //--------------- Plante ESI – Container ---------------//
+
+// var svgESI = d3.select('#planet-viz')
+// 			.append('svg')
+// 			.attr('height', height + margin.top + margin.bottom)
+//  			.attr('width', width + margin.left + margin.right)
+//  			.append('g')
+//  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+
+
+
+
+// //scaling
+// 	var y = d3.scaleLinear()
+// 	 	  	.range([height, 0])
+// 	 	  	.domain([0, d3.max(esi_d, function (d) {
+// 	 	  		return d.distance;
+// 	 	  	})]);
+
+// 	var x = d3.scaleLinear()
+// 	 	  	.range([0, width])
+// 	 	  	.domain([0.5, d3.max(esi_d, function(d) {
+// 	 	  		return d.esi;
+// 	 	  	})]);
+
+		
+// 	//draw axis
+// 		svgLyear.append('g')
+// 	 	   .call(d3.axisLeft(y));
+
+// 	 	svgLyear.append('g')
+// 	 		.attr('transform', 'translate(0,' + height +')')
+// 	 	 	.call(d3.axisBottom(x));
+
+// 	//labelling
+// 		svgLyear.append("text")             
+//       		.attr("x", width/2)
+//       		.attr("y", height+50)
+//       		.style("text-anchor", "middle")
+//       		.style("font-size", 16)
+//       		.text("ESI = earth like");
+      		
+
+//         svgLyear.append("text")
+//       		.attr("transform", "rotate(-90)")
+//       		.attr("y", -50)
+//       		.attr("x", height/-2)
+//       		.style("text-anchor", "middle")
+//       		.style("font-size", 16)
+//       		.text("Distance: Light-Years (ly)");
+      		
+
+// 	//--planets--//
+// 	 	svgLyear.selectAll('.planet')
+// 			.data(esi_d)
+// 			.enter().append('circle')
+// 			.attr('class', 'planet')
+// 			.attr('r', function(d){
+// 				return (d.radius*2);
+// 			}) //making planets bigger
+
+// 			.attr('cx', function(d){
+// 				return x(d.esi);
+// 			})
+// 			.attr('cy', function(d){
+// 				return y (d.distance);
+// 			})
+
+// 			.style('fill', function(d){
+// 				return colorPetal(d.esi);
+// 			})
+// 			 .style('stroke-width', '2')
+// 			 .style('stroke', function (d){
+// 			 	return colorPetal(d.esi);
+// 			 })
+
+			
+
+// 	//select earth
+// 			.style("fill", function(d) { 
+// 				if (d.status === "confirmed") {
+// 					return colorPetal(d.esi); 
+// 				} else if (d.status === "no Exoplanet"){
+// 					return colorPetal(d.esi);
+// 				} else {
+// 					return colorPetal(d.esi);
+// 				}
+// 			});
+
+// 	// Legend //				
+// 		var legend = svgLyear.append('g')
+// 			.attr('transform', 'translate(' + (width-50) + ',0)')
+
+// 			.attr('class', 'legend')
+// 			.selectAll('.info')
+// 			.data(colorPetal.domain())
+// 			.enter().append('g')
+// 			.attr('class', 'info')
+// 			.attr('transform', function (d, i) {
+// 				return 'translate(10,' + (i * 20) + ')';
+// 			});
+// 		legend.append('rect')
+// 			.attr('width', 10)
+// 			.attr('height', 10)
+// 			.style('fill', function (d) {
+// 				return colorPetal(d);
+// 			});
+// 		legend.append('text')
+// 			.attr("x", 24)
+// 			.attr("y", 10)
+// 			.text(function (d) {
+// 				return d;
+// 			});
 
 
 //::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
