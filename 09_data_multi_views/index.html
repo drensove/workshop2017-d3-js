@@ -20,24 +20,22 @@
 	<a href="page02.html">Page 02</a>
 </nav>
 
-<div id="tooltip"></div>
-<div class="container">
-<!-- VIZ 01 -->
-	<div>
-		<div>ESI Index - The next planet / Distance (Ly)</div>
-		<div class="stars-container" id="lyear-viz"></div>
-	</div>
-<!-- VIZ 02 -->
-	<div>
-		<div class="container__headline">
-			<div>Earth Like Planets- </div>
-			<div id="selection">all types visible</div>
-			<div id="selection--remove">remove</div>
+	<div id="tooltip"></div>
+	<div class="container">
+		<div>
+			<div>ESI Index - The next planet</div>
+			<div id="viz_1"></div>
 		</div>
-		<div class="planet-container" id="planet-viz"></div>
-	</div>
+		<div>
+			<div class="container__headline">
+				<div>Planets- </div>
+				<div id="selection">all types visible</div>
+				<div id="selection--remove">remove</div>
+			</div>
 
-</div>
+			<div id="viz_2"></div>
+		</div>
+	</div>
 
 
 <script>
@@ -63,7 +61,8 @@
 				updatePlanetViz(esi_mainData);
 			});
 
-		var svgESI = d3.select('#ESI-viz')
+//–––––––––––––––––––––––––––––––––––––––––//
+		var svg_viz_1 = d3.select('#viz_1')
 			.append('svg')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom)
@@ -82,49 +81,37 @@
 		var yAxis = d3.axisLeft(y),
 			xAxis = d3.axisBottom(x);
 
-		var svgBar = d3.select('#bar-viz')
+//–––––––––––––––––––––––––––––––––––––––––//
+
+		var svg_viz_2 = d3.select('#viz_2')
 			.append('svg')
 			.attr('width', width + margin.left + margin.right)
 			.attr('height', height + margin.top + margin.bottom);
 
-		svgBar.append("text")
-			.attr("x", 65)
-			.attr("y", 48)
-			.style("font-family", "Roboto")
-			.style("font-size", 14)
-			.style("text-anchor", "start")
-			.text("Data1");
-
-		svgBar.append("text")
-			.attr("x", 610)
-			.attr("y", 430)
-			.style("font-family", "Roboto")
-			.style("font-size", 14)
-			.style("text-anchor", "start")
-			.text("Data2");
-
-		var g = svgBar.append('g')
+		var g = svg_viz_2.append('g')
 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 		
 		var gy = g.append('g')
 			.attr('class', 'y-axis')
-			.call((yAxis)
-				.tickFormat(d3.format("d")) //?
-			);
+			.call(yAxis);
 			
 		var gx = g.append('g')
 			.attr('class', 'x-axis')
 			.attr('transform', 'translate(0,' + height + ')')
-			.call((xAxis)
-				.tickFormat(d3.format("d")) //?
-			);
+			.call(xAxis);
+//–––––––––––––––––––––––––––––––––––––––––//
 
-		//--------------- Loading ---------------//
-	d3.csv('esi.csv', function(error, esi_d) {
+  		var helper = {};
+  		var pNames = [];
+  		var pType = [];
+  		var data1 = [];
+
+
+	d3.csv('esi.csv', function(error, data) {
  		if (error) console.log(error);
-		  	  	   console.log(esi_d);
+		  	  	   console.log(data);
 
- 		esi_d.forEach(function(d) {
+ 		data.forEach(function(d) {
 
  			d.name = d.name;
 			d.esi = +d.esi;
@@ -137,61 +124,98 @@
 			d.distance = +d.distance;
 			d.status = d.status;
  		},
-
  			function(error, da) {
- 			var helper = {};
- 			var viz1 = [], viz2 = [];
- 		
+ 			
  			esi_mainData = da;
  			esi_mainData.forEach(function (d) {
+ 				if (helper[d.name] === undefined)
+ 				{
+          		pName.push(d.name);
+          		helper[d.name] = {count: 0};
+        		}
+        		helper[d.name].count++;
 
- 				// if this ... push
- 				// for [key]...
+        		if (helper[d.pType] === undefined)
+ 				{
+          		pType.push(d.pType);
+          		helper[d.pType] = {count: 0};
+        		}
+        		helper[d.pType].count++;
+        	
+        	}); 
+ 			
+  			pNames.sort();
+  			pType.sort();
+  			data1.sort();
 
- 			}); //end from data helper
+  			console.log(helper);
+  			
+  			var matrix = [];
+      		var max = -1e10;
 
- 			viz1.sort();
- 			// console.log(esi_d);
+    	    for (var key in helper) {
+    	      for (var k in helper[key]) {
+    	        if (t !== 'count') {
+    	          matrix.push({
+    	            pNames: key,
+    	            pType: t,
+    	            count: helper[key][t].count
+    	          });
+    	          if (max < helper[key][t].count) {
+    	            max = helper[key][t].count;
+    	          }
+    	        }
+    	      }
+    	    }
+ 			drawBarchart(matrix, helper, pNames, svg_viz_1);
+      		updatePlanetViz(esi_mainData);
+
+      	function drawBarchart(data, helper, planet, svg) {
+
+    		var x = d3.scaleBand()
+    		  .rangeRound([0, width])
+    		  .padding(0.1)
+    		  .domain(esi.map((d) => d));
+		
+    		var y = d3.scalePow().exponent(0.5)
+    		  .rangeRound([height, 0])
+    		  .domain([0, 180]);
+
+    		var colorPetal = d3.scaleThreshold()
+			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
+			.domain([0.6,0.8,1.0]);
+
+    		svg.append('g')
+      		   .call(d3.axisLeft(y));
+
+      		svg.append('g') // axis bottom text rotate
+      		   .attr('class', 'x-matrix')
+      		   .attr('transform', 'translate(0,' + height + ')')
+      		   .call(d3.axisBottom(x))
+      		   .selectAll('text')
+      		   .attr('transform', 'rotate(-45)')
+      		   .style('text-anchor', 'end');
+
+      		svg.selectAll('.bar')
+      		   .data(data)
+               .enter().append('rect')
+               .attr('class', 'bar')
+               .attr('y', (d) => y(helper[d.pName].count))
+      		   .attr('x', (d) => x(d.distance) + x.bandwidth() * 0.5)
+      		   .attr('width', x.bandwidth())
+      		   .attr('height', (d) => height - y(helper[d.country_killed].count))
+      		   .style('fill', (d) => color(helper[d.country_killed].count))
+      	}
 
  		}); //end from -for Each.
 
 		
 
-		function drawMap(star, data1, data2, svg) {
-
-			
-
-			var zoom = d3.zoom()
-			.scaleExtent([1, 18])
-			.translateExtent([[0,0],[width,height]])
-			.on("zoom", zoomed);
-
-			var svg = svg.append("g");
-
-			svg.select("#ESI-viz")
-			.append("svg")
-			.attr("width", width)
-			.attr("height", height)
-			.append("g");
-
-			svg.append("rect")
-			.attr("class", "overlay")
-			.attr("width", width)
-			.attr("height", height);
-
-			svg.append("g")
-			.attr("id", function(d){
-				return d.name;
-			})
-			console.log(d.name)
-			.selectAll("stars")
-			.on("click", clicked);
-
-		}
+		
 
 
 // //--------------- LightYear Distance - Container ---------------//
-// var svgLyear = d3.select('#lyear-viz')
+// var svgLyear = d3.select('#viz_1')
 // 			.append('svg')
 // 			.attr('height', height + margin.top + margin.bottom)
 //  			.attr('width', width + margin.left + margin.right)
@@ -201,7 +225,7 @@
 
 // //--------------- Plante ESI – Container ---------------//
 
-// var svgESI = d3.select('#planet-viz')
+// var svgESI = d3.select('#viz_2')
 // 			.append('svg')
 // 			.attr('height', height + margin.top + margin.bottom)
 //  			.attr('width', width + margin.left + margin.right)
@@ -216,13 +240,13 @@
 // //scaling
 // 	var y = d3.scaleLinear()
 // 	 	  	.range([height, 0])
-// 	 	  	.domain([0, d3.max(esi_d, function (d) {
+// 	 	  	.domain([0, d3.max(data, function (d) {
 // 	 	  		return d.distance;
 // 	 	  	})]);
 
 // 	var x = d3.scaleLinear()
 // 	 	  	.range([0, width])
-// 	 	  	.domain([0.5, d3.max(esi_d, function(d) {
+// 	 	  	.domain([0.5, d3.max(data, function(d) {
 // 	 	  		return d.esi;
 // 	 	  	})]);
 
@@ -255,7 +279,7 @@
 
 // 	//--planets--//
 // 	 	svgLyear.selectAll('.planet')
-// 			.data(esi_d)
+// 			.data(data)
 // 			.enter().append('circle')
 // 			.attr('class', 'planet')
 // 			.attr('r', function(d){
@@ -319,14 +343,63 @@
 //::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
 
 
+// svg_viz_2.append("text")
+// 			.attr("x", 65)
+// 			.attr("y", 48)
+// 			.style("font-family", "Roboto")
+// 			.style("font-size", 14)
+// 			.style("text-anchor", "start")
+// 			.text("Data1");
+
+// 		svgBar.append("text")
+// 			.attr("x", 610)
+// 			.attr("y", 430)
+// 			.style("font-family", "Roboto")
+// 			.style("font-size", 14)
+// 			.style("text-anchor", "start")
+// 			.text("Data2");
+
+// function drawMap(star, data1, data2, svg) {
+
+			
+
+		// 	var zoom = d3.zoom()
+		// 	.scaleExtent([1, 18])
+		// 	.translateExtent([[0,0],[width,height]])
+		// 	.on("zoom", zoomed);
+
+		// 	var svg = svg.append("g");
+
+		// 	svg.select("#ESI-viz")
+		// 	.append("svg")
+		// 	.attr("width", width)
+		// 	.attr("height", height)
+		// 	.append("g");
+
+		// 	svg.append("rect")
+		// 	.attr("class", "overlay")
+		// 	.attr("width", width)
+		// 	.attr("height", height);
+
+		// 	svg.append("g")
+		// 	.attr("id", function(d){
+		// 		return d.name;
+		// 	})
+		// 	console.log(d.name)
+		// 	.selectAll("stars")
+		// 	.on("click", clicked);
+
+		// }
+
+
 // var x = d3.scaleLinear()
 // 	 	  	.range([0, width])
-// 	 	  	.domain([0, d3.max(esi_d, function(d, i) {
+// 	 	  	.domain([0, d3.max(data, function(d, i) {
 // 	 	  		return (i * 10);
 	 	  		
 // 	 	  	})]);
 
-// esi_d.forEach(function(error, da) {
+// data.forEach(function(error, da) {
  		// 	var esi_mainData = da;
 
  		// 		esi_mainData.forEach(function(d){
@@ -344,7 +417,7 @@
 
 
 	// // Container 02
-// 		var svgly = d3.select('#lyear-viz')
+// 		var svgly = d3.select('#viz_1')
 // 			.append('svg')
 // 			.attr('width', widthSp + marginSp.left + marginSp.right)
 // 			.attr('height', height + marginSp.top + marginSp.bottom);
