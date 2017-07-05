@@ -16,7 +16,9 @@
 	<h1>Multi ESI Planet view</h1>
 	<!-- <a href="page03.html">Page 01</a>-->	
 	<a href="index.html" >home</a>
-	<a href="page03.html" class="LinkActiv">Page 01</a>
+	<a href="page01.html" class="LinkActiv">Page 01</a>
+	<a href="page02.html">Page 02</a>
+	<a href="page03.html">Page 03</a>
 </nav>
 
 <div id="tooltip"></div>
@@ -91,10 +93,11 @@
 //--------------- Plante ESI – Container ---------------//
 		var svgESI = d3.select('#esi-viz')
 			.append('svg')
-			.attr('width', widthSp + marginSp.left + marginSp.right)
-			.attr('height', height + marginSp.top + marginSp.bottom);
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom);
 
-		var g = svgESI.append('g')
+		var g = svgESI
+			.append('g')
 			.attr('transform', 'translate(' + marginSp.left + ',' + marginSp.top + ')');
 
 		var gy = g.append('g')
@@ -126,18 +129,17 @@
 			d.status = d.status;
  		});
 
- 		// var helper = {};
- 		// var planet = [], esi_viz = [], Lyear_viz = [];
+esi_mainData = esi_d; //save as global var
 
  		//scaling
 	var x = d3.scaleLinear()
 	 	  	.range([0, width])
-	 	  	.domain([0, d3.max(data, function(d) {return d.distance; })]); 
+	 	  	.domain([0, d3.max(esi_d, function(d) {return d.distance; })]); 
 	  //	.domain([0.55, d3.max(data, function (d) {return d.esi;})+0.01]); //example
 
 	var y = d3.scaleLinear()
 	 	  	.range([height, 0 ])
-	 	  	.domain([0.5, d3.max(data, function (d) {return d.esi;})]); 
+	 	  	.domain([0.5, d3.max(esi_d, function (d) {return d.esi;})]); 
 	 //	 	.domain(d3.extent(data, function (d) {return d.esi; }));
 
  		

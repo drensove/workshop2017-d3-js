@@ -18,7 +18,6 @@
 	<a href="page01.html">Page 01</a>
 	<a href="page02.html" class="LinkActiv">Page 02</a>
 	<a href="page03.html">Page 03</a>
-	<a href="page02-2.html">Page 02-2</a>
 	<a href="page02-3.html">Page 02-3</a>
 	
 </nav>
@@ -60,20 +59,20 @@
 		var marginViz1 = {
 		  top: 20,
 		  left: 120,
-		  bottom: 60,
+		  bottom: 50,
 		  right: 20
 		};
 
 		var marginViz2 = {
 		  top: 20,
-		  left: 100,
-		  bottom: 60,
+		  left: 80,
+		  bottom: 50,
 		  right: 30
 		};
 
 		var colorPetal = d3.scaleThreshold()
 			
-			.range([ "#f16613", "#f1d513", "#30b2cd", "green"]) // color range
+			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
 			.domain([0.6,0.8,1.0]);
 
 		var tooltip = d3.select('#tooltip');
@@ -98,6 +97,7 @@
     	var yAxis = d3.axisLeft(y);
   		var xAxis = d3.axisBottom(x);
 
+  		//////////////////
 
 //--------------- LightYear - add svg canvas 1 ---------------//
 var svg_v1 = d3.select('#lyear-viz')
@@ -106,6 +106,9 @@ var svg_v1 = d3.select('#lyear-viz')
  			.attr('width', width + marginViz1.left + marginViz1.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+ 		
 
 //--------------- Loading ---------------//
 	d3.csv('esi.csv', function(error, esi_d) {
@@ -148,82 +151,6 @@ esi_mainData = esi_d; //save as global var
 	 		.attr("class", "xAxis_v1")
 	 	 	.attr('transform', 'translate(0,' + height +')');
 
-		//labelling V1
-		svg_v1.append("text")             
-      		.attr("x", width/2)
-      		.attr("y", height+50)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("ESI = earth like");
-      		
-
-        svg_v1.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("Distance: Light-Years (ly)");
-
-      	//--planets--//
-	 	svg_v1.selectAll('.planet')
-			.data(esi_d)
-			.enter().append('circle')
-			.attr('class', 'planet')
-			.attr('r', function(d){
-				return (d.radius*2);
-			}) //making planets bigger
-
-			.attr('cx', function(d){
-				return x(d.esi);
-			})
-			.attr('cy', function(d){
-				return y (d.distance);
-			})
-
-			.style('fill', function(d){
-				return colorPetal(d.esi);
-			})
-			 .style('stroke-width', '2')
-			 .style('stroke', function (d){
-			 	return colorPetal(d.esi);
-			 })
-
-	//select earth
-			.style("fill", function(d) { 
-				if (d.status === "confirmed") {
-					return colorPetal(d.esi); 
-				} else if (d.status === "no Exoplanet"){
-					return colorPetal(d.esi);
-				} else {
-					return colorPetal(d.esi);
-				}
-			});
-
-				// Legend //				
-		var legend = svg_v1.append('g')
-			.attr('transform', 'translate(' + (width-50) + ',0)')
-
-			.attr('class', 'legend')
-			.selectAll('.info')
-			.data(colorPetal.domain())
-			.enter().append('g')
-			.attr('class', 'info')
-			.attr('transform', function (d, i) {
-				return 'translate(10,' + (i * 20) + ')';
-			});
-		legend.append('rect')
-			.attr('width', 10)
-			.attr('height', 10)
-			.style('fill', function (d) {
-				return colorPetal(d);
-			});
-		legend.append('text')
-			.attr("x", 24)
-			.attr("y", 10)
-			.text(function (d) {
-				return d;
-			});
 
 });//--end from csv data
 
@@ -235,13 +162,14 @@ var svg_v2 = d3.select('#size-viz')
  			.attr('width', width + marginViz2.left + marginViz2.right)
  			.append('g')
  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+// 
 
 //--------------- Loading ---------------//
-d3.csv('esi.csv', function(error, esi_d2) {
+d3.csv('esi.csv', function(error, esi_d) {
  		if (error) console.log(error);
-		  	  	   console.log(esi_d2);
+		  	  	   console.log(esi_d);
 
- 		esi_d2.forEach(function(d) {
+ 		esi_d.forEach(function(d) {
 
  			d.name = d.name;
 			d.esi = +d.esi;
@@ -257,11 +185,11 @@ d3.csv('esi.csv', function(error, esi_d2) {
 			 //end from -for Each.
 
 
-		y.domain([0, d3.max(esi_d2, function(d){
+		y.domain([0, d3.max(esi_d, function(d){
 			return d.mass;
 		})]);
 
-		x.domain([0, d3.max(esi_d2, function(d){
+		x.domain([0, d3.max(esi_d, function(d){
 			return d.period;
 		})]);
 	
@@ -275,89 +203,14 @@ d3.csv('esi.csv', function(error, esi_d2) {
 	 		.attr("class", "xAxis_v2")
 	 	 	.attr('transform', 'translate(0,' + height +')');
 
+
+
+
 ///////////
-
-	//labelling
-		svg_v2.append("text")             
-      		.attr("x", width/2)
-      		.attr("y", height+50)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("Earth year (Period)"); // xAxis Name
-      		
-
-        svg_v2.append("text")
-      		.attr("transform", "rotate(-90)")
-      		.attr("y", -50)
-      		.attr("x", height/-2)
-      		.style("text-anchor", "middle")
-      		.style("font-size", 16)
-      		.text("Earth Mass"); // yAxis Name
-      		
-
-	//--planets--//
-	 	svg_v2.selectAll('.planet')
-			.data(esi_d2)
-			.enter().append('circle')
-			.attr('class', 'planet')
-			.attr('r', function(d){
-				return (d.radius*2);
-			}) 
-
-			.attr('cx', function(d){
-				return x (d.period);
-			})
-			.attr('cy', function(d){
-				return y (d.mass);
-			})
-
-			.style('fill', function(d){
-				return colorPetal(d.esi);
-			})
-			 .style('stroke-width', '2')
-			 .style('stroke', function (d){
-			 	return colorPetal(d.esi);
-			 })
-
-	//select earth
-			.style("fill", function(d) { 
-				if (d.status === "confirmed") {
-					return colorPetal(d.esi); 
-				} else if (d.status === "no Exoplanet"){
-					return colorPetal(d.esi);
-				} else {
-					return colorPetal(d.esi);
-				}
-			});
-
-
 
 //::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
 
-	// Legend //				
-		// var legend = svg_v2.append('g')
-		// 	.attr('transform', 'translate(' + (width-50) + ',0)')
 
-		// 	.attr('class', 'legend')
-		// 	.selectAll('.info')
-		// 	.data(colorPetal.domain())
-		// 	.enter().append('g')
-		// 	.attr('class', 'info')
-		// 	.attr('transform', function (d, i) {
-		// 		return 'translate(10,' + (i * 20) + ')';
-		// 	});
-		// legend.append('rect')
-		// 	.attr('width', 10)
-		// 	.attr('height', 10)
-		// 	.style('fill', function (d) {
-		// 		return colorPetal(d);
-		// 	});
-		// legend.append('text')
-		// 	.attr("x", 24)
-		// 	.attr("y", 10)
-		// 	.text(function (d) {
-		// 		return d;
-		// 	});
 
 
  	});//--end from csv data

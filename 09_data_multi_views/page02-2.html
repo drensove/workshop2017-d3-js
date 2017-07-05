@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Example</title>
+
+	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
+	<link rel="stylesheet" type="text/css" href="../css/normalize.min.css" >
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<script type="text/javascript" src="../libraries/d3.min.js"></script>
+	<script type="text/javascript" src="../libraries/d3-scale-chromatic.min.js"></script>
+
+</head>
+<body>
+<nav class="nav">
+	<h1>Multi ESI Planet view</h1>
+	<a href="index.html">home</a>
+	<a href="page01.html">Page 01</a>
+	<a href="page02.html" class="LinkActiv">Page 02</a>
+	<a href="page03.html">Page 03</a>
+	
+</nav>
+
+<div id="tooltip"></div>
+<div class="container">
+<!-- VIZ 01 -->
+	<div>
+		<div>ESI Index - The next planet / Distance (Ly)</div>
+		<div class="stars-container" id="lyear-viz"></div>
+	</div>
+<!-- VIZ 02 -->
+	<div>
+		<div class="container__headline">
+			<div>Mass and Size- </div>
+			<div id="selection">Planets</div>
+			<div id="selection--remove">remove</div>
+		</div>
+		<div class="planet-container" id="planet-viz"></div>
+	</div>
+</div>
+
+<script>
+	window.onload = function () {
+
+		var esi_mainData;
+
+		var helper1 = {};
+		var array1 = [];
+
+		var helper2 = {};
+		var array2 = [];
+
+		var margin = {top: 20, left: 60, bottom: 60, right: 30};
+		var width = 650 * 0.9 - margin.left - margin.right;
+		var height = 650 * 0.9 - margin.top - margin.bottom;
+
+		var marginViz1 = {
+		  top: 20,
+		  left: 80,
+		  bottom: 50,
+		  right: 30
+		};
+
+		var marginViz2 = {
+		  top: 20,
+		  left: 80,
+		  bottom: 50,
+		  right: 30
+		};
+
+		var colorPetal = d3.scaleThreshold()
+			
+			.range([ "#f69696", "#beab10", "#30b2cd", "green"]) // color range
+			.domain([0.6,0.8,1.0]);
+
+		var tooltip = d3.select('#tooltip');
+		var selectionName = d3.select('#selection');
+
+		var removeSelection = d3.select('#remove-selection')
+			.on('click', function () {
+				selectionName.html('all types visible');
+				d3.select(this).style('visibility', 'hidden');
+				updatePlanetViz(esi_mainData);
+			});
+
+		var x = d3.scaleLinear() //global range
+    		.range([0, width]);
+
+  		var y = d3.scaleLinear()
+    		.range([height, 0]); 
+
+    	var r = d3.scaleLinear()
+    		.range([1, 10]);
+
+    	var yAxis = d3.axisLeft(y);
+  		var xAxis = d3.axisBottom(x);
+
+//--------------- LightYear - add svg canvas 1 ---------------//
+var svg_v1 = d3.select('#lyear-viz')
+			.append('svg')
+			.attr('height', height + marginViz1.top + marginViz1.bottom)
+ 			.attr('width', width + marginViz1.left + marginViz1.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+//--------------- Loading ---------------//
+	d3.csv('esi.csv', function(error, esi_d) {
+ 		if (error) console.log(error);
+		  	  	   console.log(esi_d);
+
+ 		esi_d.forEach(function(d) {
+
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.ptype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.flux = +d.flux;
+			d.teq = +d.teq;
+			d.period = +d.period;
+			d.distance = +d.distance;
+			d.status = d.status;
+ 		});
+			 //end from -for Each.
+
+// esi_mainData = esi_d; //save as global var
+
+
+// 		y.domain([0, d3.max(esi_d, function(d){
+// 			return d.distance;
+// 		})]);
+
+// 		x.domain([0.5, d3.max(esi_d, function(d){
+// 			return d.esi;
+// 		})]);
+	
+// //------- draw Axis_v1 ---------//
+// 		svg_v1.append('g')
+// 	 		.call(yAxis)
+// 	 		.attr("class", "yAxis_v1");
+
+// 	 	svg_v1.append('g')
+// 	 		.call(xAxis)
+// 	 		.attr("class", "xAxis_v1")
+// 	 	 	.attr('transform', 'translate(0,' + height +')');
+
+
+});//--end from csv data
+
+
+// //--------------- Size - add svg canvas 2 ---------------//
+// var svg_v2 = d3.select('#size-viz')
+// 			.append('svg')
+// 			.append('g')
+// 			.attr('height', height + margin.top + margin.bottom)
+//  			.attr('width', width + margin.left + margin.right)
+//  			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+// //--------------- Loading ---------------//
+// d3.csv('esi.csv', function(error, esi_d2) {
+//  		if (error) console.log(error);
+// 		  	  	   console.log(esi_d2);
+
+//  		esi_d2.forEach(function(d) {
+
+//  			d.name = d.name;
+// 			d.esi = +d.esi;
+// 			d.ptype = d.planettype;
+// 			d.mass = +d.mass;
+// 			d.radius = +d.radius;
+// 			d.flux = +d.flux;
+// 			d.teq = +d.teq;
+// 			d.period = +d.period;
+// 			d.distance = +d.distance;
+// 			d.status = d.status;
+//  		});
+// 			 //end from -for Each.
+
+
+// 		y.domain([0, d3.max(esi_d2, function(d){
+// 			return d.mass;
+// 		})]);
+
+// 		x.domain([0, d3.max(esi_d2, function(d){
+// 			return d.period;
+// 		})]);
+	
+// //------- draw Axis_v2 ---------//
+// 		svg_v2.append('g')
+// 	 		.call(yAxis)
+// 	 		.attr("class", "yAxis_v2");
+
+// 	 	svg_v2.append('g')
+// 	 		.call(xAxis)
+// 	 		.attr("class", "xAxis_v2")
+// 	 	 	.attr('transform', 'translate(0,' + height +')');
+
+///////////
+	
+
+	
+
+
+
+//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+	
+
+ 	});//--end from csv data
+};
+</script>
+
+</body>
+</html>
