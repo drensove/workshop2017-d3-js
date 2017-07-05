@@ -16,24 +16,24 @@
 	<h1>Multi ESI Planet view</h1>
 	<a href="index.html">home</a>
 	<a href="page01.html">Page 01</a>
-	<a href="page02.html" class="LinkActiv">Page 02</a>
+	<a href="page02.html">Page 02</a>
 	<a href="page03.html">Page 03</a>
-	<a href="page04.html">Page 04</a>
+	<a href="page04.html" class="LinkActiv">Page 04</a>
 	<a href="page05.html">Page 05</a>
-	
+
 </nav>
 
 <div id="tooltip"></div>
 <div class="container">
 <!-- VIZ 01 -->
 	<div>
-		<div>ESI Index - The next planet / Distance (Ly)</div>
+		<div>The next planet / Distance (Ly)</div>
 		<div class="stars-container" id="lyear-viz"></div>
 	</div>
 <!-- VIZ 02 -->
 	<div>
 		<div class="container__headline">
-			<div>Earth Like Planets- </div>
+			<div>Earth Like Planets- ESI index</div>
 			<div id="selection">all types visible</div>
 			<div id="selection--remove">remove</div>
 		</div>
@@ -256,13 +256,42 @@ d3.csv('esi.csv', function(error, esi_d2) {
  		});
 			 //end from -for Each.
 
+      
+      // esi_mainData.forEach(function(d) {
+
+      //   if (helper[d.ptype] === undefined) {
+      //     countries.push(d.ptype);
+      //     helper[d.ptype] = {
+      //       count: 0
+      //     };
+      //   }
+      //   helper[d.ptype].count++;
+
+      //   console.log(helper);
+      // });
+
+      // for (var key in helper) {
+      //   for (var k in helper[key]) {
+      //     if (k !== 'count') {
+      //       matrix.push({
+      //         ptype: key,
+      //         count: helper[key][k].count
+      //       });
+      //       if (max < helper[key][k].count) {
+      //         max = helper[key][k].count;
+      //       }
+      //     }
+      //   }
+      // }
+
+
 
 		y.domain([0, d3.max(esi_d2, function(d){
-			return d.mass;
+			return d.radius;
 		})]);
 
 		x.domain([0, d3.max(esi_d2, function(d){
-			return d.period;
+			return d.flux;
 		})]);
 	
 //------- draw Axis_v2 ---------//
@@ -283,7 +312,7 @@ d3.csv('esi.csv', function(error, esi_d2) {
       		.attr("y", height+50)
       		.style("text-anchor", "middle")
       		.style("font-size", 16)
-      		.text("Earth year (Period)"); // xAxis Name
+      		.text("Sun like Stars (Flux)"); // xAxis Name
       		
 
         svg_v2.append("text")
@@ -292,7 +321,7 @@ d3.csv('esi.csv', function(error, esi_d2) {
       		.attr("x", height/-2)
       		.style("text-anchor", "middle")
       		.style("font-size", 16)
-      		.text("Earth Mass"); // yAxis Name
+      		.text("Planet Radius"); // yAxis Name
       		
 
 	//--planets--//
@@ -305,15 +334,17 @@ d3.csv('esi.csv', function(error, esi_d2) {
 			}) 
 
 			.attr('cx', function(d){
-				return x (d.period);
-			})
-			.attr('cy', function(d){
-				return y (d.mass);
+				return x (d.flux);
 			})
 
-			.style('fill', function(d){
-				return colorPetal(d.esi);
-			})
+			 .attr('cy', function(d){
+			 	return y (d.radius);
+			 })
+
+			// .style('fill', function(d){
+			// 	return colorPetal(d.esi);
+			// })
+			 .style('fill', 'none')
 			 .style('stroke-width', '2')
 			 .style('stroke', function (d){
 			 	return colorPetal(d.esi);
@@ -328,7 +359,25 @@ d3.csv('esi.csv', function(error, esi_d2) {
 				} else {
 					return colorPetal(d.esi);
 				}
-			});
+
+		// svg.append('g') // axis bottom text rotate
+  //     		.attr('class', 'x-matrix')
+  //     		.attr('transform', 'translate(0,' + height + ')')
+  //     		.call(xAxis)
+  //     		.selectAll('text')
+  //     		.attr('transform', 'rotate(-45)')
+  //     		.style('text-anchor', 'end');
+
+  //     	svg.selectAll('.planet')
+  //     		.data(esi_d2)
+  //     		.enter().append('rect')
+  //     		.attr('class', 'planet')
+  //     		.attr('y', (d) => y(helper[d.ptype].count))
+  //     		.attr('x', (d) => x(d.ptype) + x.bandwidth() * 0.5)
+  //     		.attr('width', x.bandwidth())
+  //     		.attr('height', (d) => height - y(helper[d.ptype].count))
+  //     		.style('fill', (d) => color(helper[d.ptype].count))
+		 	});
 
 
 

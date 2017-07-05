@@ -6,9 +6,9 @@ body {
 #tooltip {
 			position: absolute;
 			visibility: hidden;
-			background: white;
+			background: #f2f2f2;
 			font-size: 12px;
-			padding: 5px 15px
+			padding: 5px 15px;
 }
 
 svg {
