@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Example</title>
+
+	<!-- <link href="../css/main.css" rel="stylesheet" type="text/css" > -->
+	<link rel="stylesheet" type="text/css" href="css/normalize.min.css" >
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script type="text/javascript" src="libraries/d3.min.js"></script>
+	<script type="text/javascript" src="libraries/d3-scale-chromatic.min.js"></script>
+
+	<style type="text/css">
+		#tooltip {
+			position: absolute;
+			visibility: hidden;
+			background: #f2f2f2;
+			font-family:"Roboto";
+			font-size: 16px;
+			padding: 5px 15px;
+			-webkit-box-shadow: 0px 5px 30px 0px rgba(50, 50, 50, 0.3);
+			-moz-box-shadow:    0px 5px 30px 0px rgba(50, 50, 50, 0.3);
+			box-shadow:         0px 5px 30px 0px rgba(50, 50, 50, 0.3);
+		}
+
+		body{
+			font-family:"Roboto";
+			font-size: 1em;
+		}
+	</style>
+
+</head>
+<body>
+<nav class="nav">
+	<h1>Multi ESI Planet view</h1>
+	<a href="index.html" class="LinkActiv">home</a>
+	<a href="page02.html">Page 02</a>
+	
+</nav>
+
+<div id="tooltip"></div>
+<div class="container">
+<!-- VIZ 01 -->
+	<div>
+		<div>The next planet / Distance (Ly)</div>
+		<div class="stars-container" id="lyear-viz"></div>
+	</div>
+<!-- VIZ 02 -->
+	<div>
+		<div class="container__headline">
+			<div>Earth Like Planets- ESI index</div>
+			<div id="selection">all types visible</div>
+			<div id="selection--remove">remove</div>
+		</div>
+		<div class="planet-container" id="size-viz"></div>
+	</div>
+</div>
+
+<script>
+	window.onload = function () {
+
+		var esi_mainData;
+
+		var margin = {top: 20, left: 80, bottom: 60, right: 30};
+		var width = 680 * 0.9 - margin.left - margin.right;
+		var height = 650 * 0.9 - margin.top - margin.bottom;
+
+
+		var marginViz1 = {
+		  top: 20,
+		  left: 120,
+		  bottom: 60,
+		  right: 20
+		};
+
+		var marginViz2 = {
+		  top: 20,
+		  left: 100,
+		  bottom: 60,
+		  right: 30
+		};
+
+		var colorPetal = d3.scaleThreshold()
+			
+			.range([ "#f16613", "#f1d513", "#30b2cd", "green"]) // color range
+			.domain([0.6,0.8,1.0]);
+
+		var tooltip = d3.select('#tooltip');
+		var selectionName = d3.select('#selection');
+
+		var removeSelection = d3.select('#remove-selection')
+			.on('click', function () {
+				selectionName.html('all types visible');
+				d3.select(this).style('visibility', 'hidden');
+				updatePlanetViz(esi_mainData);
+			});
+
+		var x = d3.scaleLinear() //global range
+    		.range([0, width]);
+
+  		var y = d3.scaleLinear()
+    		.range([height, 0]); 
+
+    	var r = d3.scaleLinear()
+    		.range([1, 10]);
+
+    	var yAxis = d3.axisLeft(y);
+  		var xAxis = d3.axisBottom(x);
+
+
+//--------------- LightYear - add svg canvas 1 ---------------//
+var svg_v1 = d3.select('#lyear-viz')
+			.append('svg')
+			.attr('height', height + marginViz1.top + marginViz1.bottom)
+ 			.attr('width', width + marginViz1.left + marginViz1.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+//--------------- Loading ---------------//
+	d3.csv('esi.csv', function(error, esi_d) {
+ 		if (error) console.log(error);
+		  	  	   console.log(esi_d);
+
+ 		esi_d.forEach(function(d) {
+
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.ptype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.flux = +d.flux;
+			d.teq = +d.teq;
+			d.period = +d.period;
+			d.distance = +d.distance;
+			d.status = d.status;
+ 		});
+			 //end from -for Each.
+
+
+esi_mainData = esi_d; //save as global var
+
+		y.domain([0, d3.max(esi_d, function(d){
+			return d.distance;
+		})]);
+
+		x.domain([0.5, d3.max(esi_d, function(d){
+			return d.esi;
+		})]);
+
+//------- draw Axis_v1 ---------//
+		svg_v1.append('g')
+	 		.call(yAxis)
+	 		.attr("class", "yAxis_v1");
+
+	 	svg_v1.append('g')
+	 		.call(xAxis)
+	 		.attr("class", "xAxis_v1")
+	 	 	.attr('transform', 'translate(0,' + height +')');
+
+//------- Labeling v1 ---------//
+		svg_v1.append("text")             
+      		.attr("x", width/2)
+      		.attr("y", height+50)
+      		.style("text-anchor", "middle")
+      		.style("font-size", 16)
+      		.text("ESI = earth like");
+      		
+
+        svg_v1.append("text")
+      		.attr("transform", "rotate(-90)")
+      		.attr("y", -50)
+      		.attr("x", height/-2)
+      		.style("text-anchor", "middle")
+      		.style("font-size", 16)
+      		.text("Distance: Light-Years (ly)");
+
+//------- draw planet ---------//
+	 	svg_v1.selectAll('.planet')
+			.data(esi_d)
+			.enter().append('circle')
+			.attr('class', 'planet')
+			.attr('r', function(d){
+				return (d.radius*2);
+			})
+
+			.attr('cx', function(d){
+				return x(d.esi);
+			})
+			.attr('cy', function(d){
+				return y (d.distance);
+			})
+
+			.style('fill', function(d){
+				return colorPetal(d.esi);
+			})
+			 .style('stroke-width', '2')
+			 .style('stroke', function (d){
+			 	return colorPetal(d.esi);
+			 })
+
+//------- mouse effect ---------//
+			.on('mouseover', function (d) 
+			{
+				svg_v1.selectAll('.planet')
+				.style('fill-opacity', 0.2);
+			
+				d3.select(this)
+				.style("stroke-width", 6)
+				.style('fill-opacity', 1);
+				tooltip
+		       		.html(  "Name: " + d.name + "<br>" +
+		       				"ESI: " + d.esi +" earth like"+"<br>" +
+		       				"Distance: " + d.distance + " Light-years" +"<br>" +
+		       				"Habitable Zone: " + d.ptype + "<br>")
+		       		.style("visibility", "visible")
+		            .style("left", (d3.event.pageX + 8) + "px")
+		            .style("top", (d3.event.pageY - 48) + "px");
+		        
+			})
+
+			.on('mouseout', function (d) {
+				d3.select(this)
+				  .style("stroke-width", 2);
+		   tooltip.style("visibility", "hidden");
+
+		 	   svg_v1.selectAll('.planet')
+				  .style('fill-opacity', 1); 			
+			 })
+
+//------- Filter ---------//
+			.style("fill", function(d) { 
+				if (d.status === "confirmed") {
+					return colorPetal(d.esi); 
+				} else if (d.status === "no Exoplanet"){
+					return colorPetal(d.esi);
+				} else {
+					return colorPetal(d.esi);
+				}
+			});
+
+				// Legend //				
+		var legend = svg_v1.append('g')
+			.attr('transform', 'translate(' + (width-50) + ',0)')
+
+			.attr('class', 'legend')
+			.selectAll('.info')
+			.data(colorPetal.domain())
+			.enter().append('g')
+			.attr('class', 'info')
+			.attr('transform', function (d, i) {
+				return 'translate(10,' + (i * 20) + ')';
+			});
+		legend.append('rect')
+			.attr('width', 10)
+			.attr('height', 10)
+			.style('fill', function (d) {
+				return colorPetal(d);
+			});
+		legend.append('text')
+			.attr("x", 24)
+			.attr("y", 10)
+			.text(function (d) {
+				return d;
+			});
+
+});//--end from csv data
+
+
+//--------------- Size - add svg canvas 2 ---------------//
+var svg_v2 = d3.select('#size-viz')
+			.append('svg')
+			.attr('height', height + marginViz2.top + marginViz2.bottom)
+ 			.attr('width', width + marginViz2.left + marginViz2.right)
+ 			.append('g')
+ 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+//--------------- Loading ---------------//
+d3.csv('esi.csv', function(error, esi_d2) {
+ 		if (error) console.log(error);
+		  	  	   console.log(esi_d2);
+
+ 		esi_d2.forEach(function(d) {
+
+ 			d.name = d.name;
+			d.esi = +d.esi;
+			d.ptype = d.planettype;
+			d.mass = +d.mass;
+			d.radius = +d.radius;
+			d.flux = +d.flux;
+			d.teq = +d.teq;
+			d.period = +d.period;
+			d.distance = +d.distance;
+			d.status = d.status;
+ 		});
+			 //end from -for Each.
+
+		y.domain([0, d3.max(esi_d2, function(d){
+			return d.radius;
+		})]);
+
+		x.domain([0, d3.max(esi_d2, function(d){
+			return d.flux;
+		})]);
+	
+//------- draw Axis_v2 ---------//
+		svg_v2.append('g')
+	 		.call(yAxis)
+	 		.attr("class", "yAxis_v2");
+
+	 	svg_v2.append('g')
+	 		.call(xAxis)
+	 		.attr("class", "xAxis_v2")
+	 	 	.attr('transform', 'translate(0,' + height +')');
+
+///////////
+
+//------- Labeling ---------//
+		svg_v2.append("text")             
+      		.attr("x", width/2)
+      		.attr("y", height+50)
+      		.style("text-anchor", "middle")
+      		.style("font-size", 16)
+      		.text("Stars like our Sun (Flux)"); // xAxis Name
+      		
+
+        svg_v2.append("text")
+      		.attr("transform", "rotate(-90)")
+      		.attr("y", -50)
+      		.attr("x", height/-2)
+      		.style("text-anchor", "middle")
+      		.style("font-size", 16)
+      		.text("Planet Radius"); // yAxis Name
+      		
+
+//------- draw planets ---------//
+	 	svg_v2.selectAll('.planet')
+			.data(esi_d2)
+			.enter().append('circle')
+			.attr('class', 'planet')
+			.attr('r', function(d){
+				return (d.radius*2);
+			}) 
+
+			.attr('cx', function(d){
+				return x (d.flux);
+			})
+
+			 .attr('cy', function(d){
+			 	return y (d.radius);
+			 })
+
+			.style('fill', function(d){
+				return colorPetal(d.esi);
+			})
+			// .style('fill', 'none')
+			 .style('stroke-width', '2')
+			 .style('stroke', function (d){
+			 	return colorPetal(d.esi);
+			 })
+
+//------- mouse effect ---------//
+			.on('mouseover', function (d) 
+			{
+				svg_v2.selectAll('.planet')
+				.style('fill-opacity', 0.2);
+			
+				d3.select(this)
+				.style("stroke-width", 6)
+				.style('fill-opacity', 1);
+				tooltip
+		       		.html(  "Name: " + d.name + "<br>" +
+		       				"ESI: " + d.esi +" earth like"+"<br>" +
+		       				"Distance: " + d.distance + " Light-years" +"<br>" +
+		       				"Habitable Zone: " + d.ptype + "<br>")
+		       		.style("visibility", "visible")
+		            .style("left", (d3.event.pageX + 8) + "px")
+		            .style("top", (d3.event.pageY - 48) + "px");
+		        
+			})
+
+			.on('mouseout', function (d) {
+				d3.select(this)
+				  .style("stroke-width", 2);
+		   tooltip.style("visibility", "hidden");
+
+		 	   svg_v2.selectAll('.planet')
+				  .style('fill-opacity', 1); 			
+			 })
+
+
+	//select earth
+			.style("fill", function(d) { 
+				if (d.status === "confirmed") {
+					return colorPetal(d.esi); 
+				} else if (d.status === "no Exoplanet"){
+					return colorPetal(d.esi);
+				} else {
+					return colorPetal(d.esi);
+				}
+
+
+		
+		 	});
+
+
+//::CODE NOTES and IDEAS:://////////////////////////////////////////////////////////
+
+
+ 	});//--end from csv data
+};
+</script>
+
+</body>
+</html>
